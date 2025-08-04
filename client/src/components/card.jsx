@@ -32,8 +32,8 @@ Card.propTypes = {
 
 const StyledWrapper = styled.div`
   .card {
-    width: clamp(350px, 25vw, 500px); /* Mínimo:250px, Ideal:25% del ancho de ventana, Máximo:300px */
-    height: clamp(450px, 35vw, 600px);
+    width: clamp(350px, 25vw, 340px); /* Mínimo:250px, Ideal:25% del ancho de ventana, Máximo:300px */
+    height: clamp(450px, 35vw, 440px);
     /* Resto de tus estilos... */
   }
     border-radius: 5px;
@@ -59,7 +59,7 @@ const StyledWrapper = styled.div`
 
   .card-title {
     position: absolute;
-    bottom: 30px;
+    bottom: 40px;
     left: 0;
     right: 0;
     color: white;
