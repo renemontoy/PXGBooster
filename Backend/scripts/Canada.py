@@ -1,9 +1,7 @@
 import pandas as pd
 import io
-from io import BytesIO
-from fastapi.responses import StreamingResponse
-from openpyxl.styles import NamedStyle
-from fastapi import UploadFile, File, Form, HTTPException
+from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
+from fastapi import UploadFile, File, Form, HTTPException # pyright: ignore[reportMissingImports]
 
 async def Canada(
         file: UploadFile = File(...)

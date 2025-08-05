@@ -11,7 +11,6 @@ const Footer = () => {
 // Estilos con Styled Components
 const FooterContainer = styled.footer`
   text-align: center;
-  padding: 1.5rem;
   background: transparent;
   color: #777;
   font-size: 0.9rem;

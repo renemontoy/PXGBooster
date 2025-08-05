@@ -1,7 +1,8 @@
-from fastapi import APIRouter, UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form # pyright: ignore[reportMissingImports]
 from scripts.Adyen import Adyen
 from scripts.Canada import Canada
 from scripts.Shopify import Shopify
+from scripts.Ferrule import Ferrule
 
 router = APIRouter()
 
@@ -35,4 +36,9 @@ async def procesar(
 ):
     return await Shopify(file, file2, deposit, account, depositdate, period, paymentmethod)
 
+@router.post("/uploadferrule")
+async def procesar(
+    file: UploadFile = File(...),
+):
+    return await Ferrule(file)
 

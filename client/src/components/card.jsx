@@ -32,8 +32,8 @@ Card.propTypes = {
 
 const StyledWrapper = styled.div`
   .card {
-    width: clamp(350px, 25vw, 340px); /* Mínimo:250px, Ideal:25% del ancho de ventana, Máximo:300px */
-    height: clamp(450px, 35vw, 440px);
+    width: clamp(350px, 25vw, 550px); /* Mínimo:250px, Ideal:25% del ancho de ventana, Máximo:300px */
+    height: clamp(450px, 35vw, 650px);
     /* Resto de tus estilos... */
   }
     border-radius: 5px;

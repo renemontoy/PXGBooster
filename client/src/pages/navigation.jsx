@@ -29,7 +29,7 @@ export function PXG() {
     {
       title: "Ferrule",
       imageUrl: "/images/PXG5.jpg",
-      route: "/defect_warranty"
+      route: "/Ferrule"
     },
     {
       title: "Defect & Warranty",
@@ -68,7 +68,7 @@ export function PXG() {
 
   return (
     <div style={{
-      padding: '40px 0',
+      padding: '5px 0',
       background: 'white',
     }}>
       

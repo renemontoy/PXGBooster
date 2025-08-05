@@ -10,7 +10,7 @@ const Layout = () => {
       display: 'flex',
       flexDirection: 'column',
       minHeight: '98vh',
-      margin: -10,
+      margin: -6,
       padding: 0,
       boxSizing: 'border-box',
       overflowX: 'hidden'

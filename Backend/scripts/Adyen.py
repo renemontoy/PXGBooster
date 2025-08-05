@@ -1,9 +1,7 @@
 import pandas as pd
 import io
-from io import BytesIO
-from fastapi.responses import StreamingResponse
-from openpyxl.styles import NamedStyle
-from fastapi import UploadFile, File, Form, HTTPException
+from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
+from fastapi import UploadFile, File, Form, HTTPException # pyright: ignore[reportMissingImports]
 
 async def Adyen(
     file: UploadFile = File(...),          # ACMA (Excel)
@@ -15,7 +13,6 @@ async def Adyen(
     paymentmethod: str = Form(...)
 ):
     maxrows = 160
-    text_style = NamedStyle(name="text_style", number_format="@")
 
     # Verificación básica de archivos
     if not file.filename or not file2.filename:
