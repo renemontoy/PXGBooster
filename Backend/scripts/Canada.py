@@ -1,7 +1,7 @@
 import pandas as pd
 import io
 from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
-from fastapi import UploadFile, File, Form, HTTPException # pyright: ignore[reportMissingImports]
+from fastapi import UploadFile, File, HTTPException # pyright: ignore[reportMissingImports]
 
 async def Canada(
         file: UploadFile = File(...)
