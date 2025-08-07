@@ -39,7 +39,7 @@ export function Defect() {
   
     // Usar toast.promise para mostrar mensajes de carga y resultados de la promesa
     toast.promise(
-      axios.post('/api/uploaddefect/', formData, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/uploaddefect/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', 
         },

@@ -22,7 +22,7 @@ export function Canada() {
     formData.append('file', file);
 
     toast.promise(
-      axios.post('/api/uploadcanada/', formData, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/uploadcanada/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',  
           },

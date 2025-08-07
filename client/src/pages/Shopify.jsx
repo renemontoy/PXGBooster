@@ -40,7 +40,7 @@ export function Shopify() {
     formData.append('paymentmethod', 'SHOPPAY');
 
     toast.promise(
-      axios.post('/api/uploadshopify/', formData, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/uploadshopify/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data', 
           },

@@ -40,7 +40,7 @@ export function AdyenUploadPage() {
     formData.append('paymentmethod', 'ADYEN');
 
     toast.promise(
-      axios.post('/api/uploadadyen/', formData, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/uploadadyen/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data', 
           },

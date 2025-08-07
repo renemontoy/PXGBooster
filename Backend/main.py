@@ -8,7 +8,7 @@ app = FastAPI()
 
 # Obtén el dominio del frontend desde una variable de entorno (para desarrollo y producción)
 frontend_origin = os.getenv("FRONTEND_ORIGIN", "http://localhost:5173")
-app.mount("/", StaticFiles(directory="dist", html=True), name="static")
+
 # CORS
 app.add_middleware(
     CORSMiddleware,

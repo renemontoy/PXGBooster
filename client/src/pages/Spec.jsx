@@ -26,7 +26,7 @@ export function Spec() {
   
     // Usar toast.promise para mostrar mensajes de carga y resultados de la promesa
     toast.promise(
-      axios.post('/api/uploadspec/', formData, {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/uploadspec/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data', 
         },
