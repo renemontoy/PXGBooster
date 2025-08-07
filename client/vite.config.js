@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8000', // URL del backend
+        target: 'https://pxgboost.onrender.com', // URL del backend http://127.0.0.1:8000
         changeOrigin: true,
         secure: false,
       }
