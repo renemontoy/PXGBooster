@@ -26,7 +26,7 @@ export function Spec() {
   
     // Usar toast.promise para mostrar mensajes de carga y resultados de la promesa
     toast.promise(
-      axios.post('http://localhost:8000/api/uploadspec/', formData, {
+      axios.post('/api/uploadspec/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', 
         },

@@ -40,7 +40,7 @@ export function Shopify() {
     formData.append('paymentmethod', 'SHOPPAY');
 
     toast.promise(
-      axios.post('http://localhost:8000/api/uploadshopify/', formData, {
+      axios.post('/api/uploadshopify/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data', 
           },

@@ -23,7 +23,7 @@ export function Ferrule() {
   
     // Usar toast.promise para mostrar mensajes de carga y resultados de la promesa
     toast.promise(
-      axios.post('http://localhost:8000/api/uploadferrule', formData, {
+      axios.post('/api/uploadferrule', formData, {
         headers: {
           'Content-Type': 'multipart/form-data', 
         },

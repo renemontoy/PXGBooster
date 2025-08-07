@@ -26,7 +26,7 @@ export function GlobalPayments() {
     formData.append('period', '08-2025');
 
     toast.promise(
-      axios.post('http://localhost:8000/api/uploadglobalpayments/', formData, {
+      axios.post('/api/uploadglobalpayments/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data', 
           },
