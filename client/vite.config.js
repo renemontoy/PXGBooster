@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [react()],
   build: {
     outDir: 'dist' // esto asegura que Vite cree el directorio que Render espera
