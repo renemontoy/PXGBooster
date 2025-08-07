@@ -5,6 +5,9 @@ import Layout from "./components/layout";
 import { Canada } from "./pages/Canada";
 import { Shopify } from "./pages/Shopify";
 import { Ferrule } from "./pages/Ferrule";
+import { GlobalPayments } from "./pages/GlobalP";
+import { Spec } from "./pages/Spec";
+import { Defect } from "./pages/Defect&Warranty";
 
 function App() {
   return (
@@ -20,7 +23,9 @@ function App() {
           <Route path="Canada" element={<Canada />} />
           <Route path="Shopify" element={<Shopify />} />
           <Route path="Ferrule" element={<Ferrule />} />
-          
+          <Route path="GlobalPayments" element={<GlobalPayments />} />
+          <Route path="Spec" element={<Spec />} />
+          <Route path="Defect" element={<Defect />} />          
         </Route>
       </Routes>
     </BrowserRouter>

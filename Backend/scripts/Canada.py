@@ -7,7 +7,7 @@ async def Canada(
         file: UploadFile = File(...)
         ):
     if not file.filename:
-        raise HTTPException(status_code=400, detail="Debe proporcionar ambos archivos")
+        raise HTTPException(status_code=400, detail="Archivo no seleccionado")
     try:
         #Files
         CanadaFile = await file.read()

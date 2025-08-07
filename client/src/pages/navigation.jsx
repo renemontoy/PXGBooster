@@ -19,7 +19,7 @@ export function PXG() {
     {
       title: "Global Payments",
       imageUrl: "/images/PXG3.jpg",
-      route: "/defect_warranty"
+      route: "/GlobalPayments"
     },
     {
       title: "Canada",
@@ -34,12 +34,12 @@ export function PXG() {
     {
       title: "Defect & Warranty",
       imageUrl: "/images/PXG6.jpg",
-      route: "/defect_warranty"
+      route: "/Defect"
     },
     {
       title: "Spec Check Analysis",
       imageUrl: "/images/PXG7.jpg",
-      route: "/defect_warranty"
+      route: "/Spec"
     }
   ];
 

@@ -3,6 +3,9 @@ from scripts.Adyen import Adyen
 from scripts.Canada import Canada
 from scripts.Shopify import Shopify
 from scripts.Ferrule import Ferrule
+from scripts.GlobalP import GlobalPayments
+from scripts.Spec import Spec
+from scripts.Defect import Defect
 
 router = APIRouter()
 
@@ -42,3 +45,26 @@ async def procesar(
 ):
     return await Ferrule(file)
 
+@router.post("/uploadglobalpayments")
+async def procesar(
+    file: UploadFile = File(...),
+    account: str = Form(...),
+    depositdate: str = Form(...),
+    period: str = Form(...)
+):
+    return await GlobalPayments(file, account, depositdate, period)
+
+@router.post("/uploadspec")
+async def procesar(
+    file: UploadFile = File(...),
+    weekfront: str = Form(...)
+):
+    return await Spec(file, weekfront)
+
+@router.post("/uploaddefect")
+async def procesar(
+    file: UploadFile = File(...),
+    file2: UploadFile = File(...),
+    weekfront: str = Form(...)
+):
+    return await Defect(file, file2, weekfront)

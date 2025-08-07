@@ -1,9 +1,9 @@
 import pandas as pd
 import io
 from io import BytesIO
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
 from openpyxl.styles import NamedStyle
-from fastapi import UploadFile, File, Form, HTTPException
+from fastapi import UploadFile, File, Form, HTTPException # pyright: ignore[reportMissingImports]
 
 async def Shopify(
     file: UploadFile = File(...),          # ACMA (Excel)
@@ -45,12 +45,12 @@ async def Shopify(
             'Description':'Reference_clean'
         }, inplace=True)
 
-        print(dfrefunds)
+        
         # Quitar sufijos como ".2", ".3", etc., del final de la columna 'Description'
         dfrefundsAcma['Reference_clean'] = dfrefundsAcma['Payment Ref.'].str.replace(r'\.\d+$', '', regex=True)
-        print(dfrefundsAcma)
+        
         dfmergerefunds = pd.merge(dfrefunds,dfrefundsAcma,  how='left', left_on='Reference_clean', right_on='Reference_clean', suffixes=('dfShopy','dfAcma'))
-        #print(dfmergerefunds)
+       
         dfmergerefunds = dfmergerefunds[['Description','Payment Ref.','Reference Nbr.','Amount']]
         #dfmergerefunds = dfmergerefunds.drop_duplicates(subset=['Reference Nbr.'])
         
@@ -60,7 +60,7 @@ async def Shopify(
         dfmergepayments = pd.merge(dfpaymentsShopify,dfAcma,  how='left', on='Description', suffixes=('dfShopy','dfAcma'))
         dfmergepayments = dfmergepayments.loc[dfmergepayments['TypedfAcma']=='Payment']
         dfmergepayments =dfmergepayments[['Payment Ref.','Reference Nbr.']]
-        #print(dfmergepayments)
+       
 
         #Enter Manually
         dfpaymentsNAManually = pd.merge(dfpaymentsShopify,dfAcma,  how='left', on='Description', suffixes=('dfShopy','dfAcma'))
@@ -70,7 +70,7 @@ async def Shopify(
             'TypedfShopy' : 'Type',
             'Description':'Order',
         }, inplace=True)
-        print(dfpaymentsNAManually)
+       
 
         #Allpayments
         
