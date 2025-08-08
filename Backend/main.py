@@ -12,12 +12,13 @@ app = FastAPI()
 
 origins = [
     "https://pxgbooster.onrender.com",  # Tu frontend en Render
-    "http://localhost:5173",            # Para desarrollo local con Vite
+    "http://localhost:5173",  
+    "http://localhost:8000",                   # Para desarrollo local con Vite
 ]
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[origins],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
