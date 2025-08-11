@@ -9,6 +9,10 @@ from scripts.Defect import Defect
 
 router = APIRouter()
 
+@router.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @router.post("/uploadadyen/")
 async def procesar(
     file: UploadFile = File(...),
