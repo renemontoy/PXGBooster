@@ -251,8 +251,21 @@ async def Spec(
 
         story.append(PageBreak())
         semana_seleccionada = int(semana_seleccionada)
-        semanas_interes = [f'Week {w}' for w in range(243, semana_seleccionada + 1)]  
-      
+        # Obtener todas las semanas disponibles en el archivo
+        # Asegúrate de que df sea tu DataFrame y tenga una columna llamada 'Week'
+        semanas_disponibles = sorted([
+            int(str(w).replace("Week ", ""))
+            for w in dfSpec['Week'].unique()
+            if isinstance(w, str) and w.startswith("Week ") and str(w).replace("Week ", "").isdigit()
+        ])
+
+        # Filtrar las semanas que son menores o iguales a la seleccionada
+        semanas_validas = [w for w in semanas_disponibles if w <= semana_seleccionada]
+
+        # Tomar las últimas 6 (o menos si no hay suficientes)
+        ultimas_semanas = semanas_validas[-8:]
+        semanas_interes = [f"Week {w}" for w in ultimas_semanas]
+        semanas_validas = [f"Week {w}" for w in semanas_validas]
 
         rows_passfail = [
             'Boxing', 'Cleanliness', 'Club Length', 'Ferrules', 'Grip Alignment', 'Grip Length', 'Hosel Setting', 'Lie', 'Loft',
