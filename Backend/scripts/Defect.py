@@ -185,6 +185,18 @@ async def Defect(
             ('BACKGROUND', (0,-1), (-1,-1), rl_colors.lightgrey),
             ('FONTNAME',(0,-1),(-1,-1),'Helvetica-Bold'),
         ]
+
+        table_style_weeks_2 = [
+            ('FONTSIZE', (0,0), (-1,-1), 9), 
+            ('BACKGROUND', (0,0), (-1,0), rl_colors.darkgrey),
+            ('ALIGN',(0,0),(-1,0),'CENTER'),
+            ('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'),
+            ('ALIGN',(0,1),(-1,-1),'CENTER'),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('GRID',(0,0),(-1,-1),0.5,rl_colors.black),
+            ('BACKGROUND', (0,-1), (-1,-1), rl_colors.lightgrey),
+            ('FONTNAME',(0,-1),(-1,-1),'Helvetica-Bold'),
+        ]
         prod_style = [
             ('FONTSIZE', (0,0), (-1,-1), 9), 
             ('SPAN', (0, 0), (-1, 0)), #Add title
@@ -528,7 +540,7 @@ async def Defect(
         # Suma de ordenes por semana historico
         weekly_orders_totals_hist = df_weekly8.set_index('Week')['Total Orders']
         # Errores de Warranty
-        orders_hist = pd.crosstab(dfwarranty['Type'], df['Historical Week'])
+        orders_hist = pd.crosstab(dfwarranty8['Type'], df['Historical Week'])
 
         #METODO DE TOTALES
         total_errores_hist = orders_hist.sum().sum()
@@ -541,9 +553,12 @@ async def Defect(
         orders_pct_hist['TOTAL'] = orders_pct_hist.sum(axis=1)
 
         # CORRECCIÓN: Calcula el AVG correctamente (errores totales de categoría / total órdenes)
-        orders_pct_hist['AVG'] = (errores_por_categoria / total_ordenes_hist) * 100
+        errores_por_categoria_8 = dfwarranty8['Type'].value_counts()
+        orders_pct_hist['AVG'] = (errores_por_categoria_8 / total_ordenes_hist) * 100
 
-        avg_orders_pct_hist = orders_pct_hist[['AVG','TOTAL']].copy()
+        #avg_orders_pct_hist = orders_pct_hist[['AVG','TOTAL']].copy()
+
+        avg_orders_pct_hist = orders_pct_hist[['AVG']].copy()
 
         # Formateo
         avg_orders_pct_hist['AVG'] = avg_orders_pct_hist['AVG'].round(1).astype(str) + '%'
@@ -672,8 +687,8 @@ async def Defect(
             ])
 
         # 6. Crear tabla de resumen
-        summary_table = Table(summary_data, colWidths=[100,58, 58, 58, 58], repeatRows=1, rowHeights=row_heights_w_hist)
-        summary_table.setStyle(TableStyle(table_style_graphic))
+        summary_table = Table(summary_data, colWidths=[58, 58, 58, 58], repeatRows=1, rowHeights=row_heights_w_hist)
+        summary_table.setStyle(TableStyle(table_style_weeks_2))
         graphic_joined = Table([[warranty_table_hist, summary_table]])
         story.append(graphic_joined)
 
@@ -892,40 +907,56 @@ async def Defect(
 
             # 2. Calcular las nuevas filas
             misbuilds_per_orders = []
-            complemento_100 = []  # Nueva lista para 100% - Misbuilds/Orders
+            complemento_100 = []
+
+            # Extraer la fila "Total" que contiene los misbuilds totales por semana
+            if isinstance(count_misbuilds, pd.DataFrame):
+                # Buscar la fila donde el índice es "Total"
+                total_row = count_misbuilds[count_misbuilds.index == 'Total']
+                
+                # Si no encuentra "Total", buscar alternativas (case insensitive)
+                if total_row.empty:
+                    total_row = count_misbuilds[count_misbuilds.index.str.contains('total', case=False)]
+                
+                # Si aún no encuentra, usar la última fila (asumiendo que es el total)
+                if total_row.empty:
+                    total_row = count_misbuilds.iloc[[-1]]
+                
+                # Convertir a Serie para fácil acceso
+                misbuilds_series = total_row.iloc[0]
 
             for week in df_weekly['Week']:
-                # Obtener el valor numérico REAL de misbuilds (3 métodos seguros)
                 try:
-                    # Método 1: Si count_misbuilds es un DataFrame
-                    if isinstance(count_misbuilds, pd.DataFrame):
-                        misbuilds = count_misbuilds.loc[week].iloc[0] if week in count_misbuilds.index else 0
-                    # Método 2: Si es una Serie
-                    elif isinstance(count_misbuilds, pd.Series):
-                        misbuilds = count_misbuilds[week] if week in count_misbuilds.index else 0
-                    # Método 3: Si es un diccionario u otro tipo
+                    # Obtener el valor de misbuilds para la semana específica
+                    # Buscar columnas que coincidan con el formato de semana
+                    week_column = None
+                    for col in misbuilds_series.index:
+                        if str(week) in str(col) or f"Week {week}" in str(col):
+                            week_column = col
+                            break
+                    
+                    if week_column:
+                        misbuilds = float(misbuilds_series[week_column])
                     else:
-                        misbuilds = count_misbuilds.get(week, 0)
-                except (KeyError, IndexError):
+                        misbuilds = 0
+                        
+                except (KeyError, IndexError, AttributeError):
                     misbuilds = 0
                 
-                # Convertir a float explícitamente (seguro)
-                misbuilds = float(misbuilds)
-                
-                # Obtener orders (asegurarse que es un valor numérico)
+                # Obtener orders
                 orders = float(df_weekly[df_weekly['Week'] == week]['Total Orders'].iloc[0])
                 
-                # Calcular ratios con protección completa
+                # Calcular ratios
                 ratio_orders = misbuilds / orders if orders != 0 else 0
                 ratio_complemento = (1 - ratio_orders) if orders != 0 else 1
                 
-                # Formatear (Misbuilds/Orders como decimal, complemento como porcentaje)
-                misbuilds_per_orders.append(f"{ratio_orders: .2%}")
-                complemento_100.append(f"{ratio_complemento:.2%}")  # Formato de porcentaje
-
+                misbuilds_per_orders.append(ratio_orders)
+                complemento_100.append(ratio_complemento)
             # 3. Agregar las filas a la tabla
-            prod_data_cm.append(["Misbuild of Orders"] + misbuilds_per_orders)
-            prod_data_cm.append(["Build Quality"] + complemento_100)  # Nueva fila modificada
+            misbuilds_formateados = [f"{valor:.2%}" for valor in misbuilds_per_orders]
+            complemento_formateados = [f"{valor:.2%}" for valor in complemento_100]
+            prod_data_cm.append(["Misbuild of Orders"] + misbuilds_formateados)
+            prod_data_cm.append(["Build Quality"] + complemento_formateados)  # Nueva fila modificada
 
             # 4. Crear la tabla con ReportLab
             prod_cm_table = Table(
@@ -1051,7 +1082,7 @@ async def Defect(
             canvas.setFont("Helvetica", 50)
             canvas.setFillColor(rl_colors.black)
             canvas.drawCentredString(width / 2, height / 2 + 20, "Defects & Warranty")
-            canvas.drawCentredString(width / 2, height / 2 - 35, f"{semana_seleccionada}")
+            canvas.drawCentredString(width / 2, height / 2 - 35, f"Week {semana_seleccionada}")
 
         # Guardar
         doc.build(story, onFirstPage=draw_cover)
