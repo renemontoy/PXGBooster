@@ -183,7 +183,7 @@ async def Defect(
             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
             ('GRID',(0,0),(-1,-1),0.5,rl_colors.black),
             ('BACKGROUND', (0,-1), (-1,-1), rl_colors.lightgrey),
-            ('FONTNAME',(0,-2),(-1,-1),'Helvetica-Bold'),
+            ('FONTNAME',(0,-1),(-1,-1),'Helvetica-Bold'),
         ]
         prod_style = [
             ('FONTSIZE', (0,0), (-1,-1), 9), 
@@ -547,20 +547,20 @@ async def Defect(
 
         # Formateo
         avg_orders_pct_hist['AVG'] = avg_orders_pct_hist['AVG'].round(1).astype(str) + '%'
-        avg_orders_pct_hist['TOTAL'] = avg_orders_pct_hist['TOTAL'].round(1).astype(str) + '%'
+        #avg_orders_pct_hist['TOTAL'] = avg_orders_pct_hist['TOTAL'].round(1).astype(str) + '%'
 
         #Tabla Running
         avg_orders_data_hist = [['Runnig Total']]
         avg_orders_data_hist += [list(avg_orders_pct_hist.columns)]
         avg_orders_data_hist += avg_orders_pct_hist.values.tolist()
-        total_errors_hist = orders_pct_hist[orders_hist.columns].sum().sum() 
+        #total_errors_hist = orders_pct_hist[orders_hist.columns].sum().sum() 
         avg_orders_data_hist.append([
             f"{avg_weekly_pct_hist.round(1)}%",  
-            f"{total_errors_hist.mean().round(1)}%"           
+        #    f"{total_errors_hist.mean().round(1)}%"           
         ])
         num_filas_avg_opct_hist = len(avg_orders_data_hist)
         row_heights_avg_opct_hist = [grh] * num_filas_avg_opct_hist
-        avg_orders_table_hist = Table(avg_orders_data_hist, colWidths=[60,60], rowHeights=row_heights_avg_opct_hist)
+        avg_orders_table_hist = Table(avg_orders_data_hist, colWidths=[120], rowHeights=row_heights_avg_opct_hist)
         avg_orders_table_hist.setStyle(TableStyle(table_style_weeks))
 
         orders_joined = Table([[orders_table, avg_orders_table, avg_orders_table_hist]])
@@ -662,10 +662,9 @@ async def Defect(
         last_4_weeks = warranty_hist8.iloc[:, -4:].sum(axis=1) #if len(warranty_hist8.columns) >= 4 else pd.Series(0, index=warranty_hist8.index)
 
         # 5. Preparar datos para la tabla de resumen
-        summary_data = [['Type','Last 4 Weeks', 'Weeks 5-8', 'Dif','Last 8 Weeks']]
+        summary_data = [['Last 4 Weeks', 'Weeks 5-8', 'Dif','Last 8 Weeks']]
         for idx in warranty_hist8.index:
             summary_data.append([
-                idx,
                 str(int(last_4_weeks[idx])),
                 str(int(weeks_5_to_8[idx])),
                 str(int(last_4_weeks[idx])-int(weeks_5_to_8[idx])),
