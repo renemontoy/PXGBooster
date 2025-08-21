@@ -8,6 +8,7 @@ import { Ferrule } from "./pages/Ferrule";
 import { GlobalPayments } from "./pages/GlobalP";
 import { Spec } from "./pages/Spec";
 import { Defect } from "./pages/Defect&Warranty";
+import { Loomis } from "./pages/Loomis";
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
           <Route path="Ferrule" element={<Ferrule />} />
           <Route path="GlobalPayments" element={<GlobalPayments />} />
           <Route path="Spec" element={<Spec />} />
-          <Route path="Defect" element={<Defect />} />          
+          <Route path="Defect" element={<Defect />} />  
+          <Route path="Loomis" element={<Loomis />} />          
         </Route>
       </Routes>
     </BrowserRouter>

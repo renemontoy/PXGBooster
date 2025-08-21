@@ -114,8 +114,8 @@ async def GlobalPayments(
         )
 
     except UnicodeDecodeError:
-        raise HTTPException(status_code=400, detail="Error de codificación. Intente guardar los archivos como UTF-8 BOM")
+        raise HTTPException(status_code=400, detail="Error de codificación.")
     except pd.errors.ParserError:
-        raise HTTPException(status_code=400, detail="Error al analizar el CSV. Verifique el delimitador (usar coma o punto y coma)")
+        raise HTTPException(status_code=400, detail="Error al analizar el US Chase.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error inesperado: {str(e)}")

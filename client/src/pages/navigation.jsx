@@ -40,6 +40,11 @@ export function PXG() {
       title: "Spec Check Analysis",
       imageUrl: "/images/PXG7.jpg",
       route: "/Spec"
+    },
+    {
+      title: "Loomis",
+      imageUrl: "/images/PXG4.jpg",
+      route: "/Loomis"
     }
   ];
 

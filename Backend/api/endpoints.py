@@ -6,6 +6,7 @@ from scripts.Ferrule import Ferrule
 from scripts.GlobalP import GlobalPayments
 from scripts.Spec import Spec
 from scripts.Defect import Defect
+from scripts.Loomis import Loomis
 
 router = APIRouter()
 
@@ -72,3 +73,10 @@ async def procesar(
     weekfront: str = Form(...)
 ):
     return await Defect(file, file2, weekfront)
+
+@router.post("/uploadloomis")
+async def procesar(
+    file: UploadFile = File(...),
+    depositdate: str = Form(...),
+):
+    return await Loomis(file, depositdate)
