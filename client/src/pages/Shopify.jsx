@@ -36,7 +36,7 @@ export function Shopify() {
     formData.append('deposit', deposit);
     formData.append('account', '10250');
     formData.append('depositdate', date);
-    formData.append('period', '08-2025');
+    formData.append('period', '09-2025');
     formData.append('paymentmethod', 'SHOPPAY');
 
     toast.promise(

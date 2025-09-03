@@ -23,7 +23,7 @@ export function GlobalPayments() {
     formData.append('file', file);
     formData.append('account', '10250');
     formData.append('depositdate', date);
-    formData.append('period', '08-2025');
+    formData.append('period', '09-2025');
 
     toast.promise(
       axios.post(`${import.meta.env.VITE_API_URL}/api/uploadglobalpayments/`, formData, {
