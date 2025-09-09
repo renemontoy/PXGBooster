@@ -790,7 +790,9 @@ async def Defect(
         df_weekly8 = df_weekly8 [['Week', 'Start Date', 'End Date', 'ASM Clubs', 'ASM Orders']]
         df_weekly8_data = [df_weekly8.columns.tolist()]
         df_weekly8_data += df_weekly8.values.tolist()
-        df_weekly8_table = Table(df_weekly8_data)
+        num_filas_df_weekly8_data = len(df_weekly8_data)
+        row_heights_df_weekly8_data = [grh] * num_filas_df_weekly8_data
+        df_weekly8_table = Table(df_weekly8_data, rowHeights=row_heights_df_weekly8_data)
         df_weekly8_table.setStyle(TableStyle(table_style_semana_actual))
         story.append(Spacer(width=0, height=0.3*cm))
         story.append(df_weekly8_table)
@@ -880,7 +882,7 @@ async def Defect(
             colnames=['Historical Week']
         ).reindex(columns=ultimas_4_semanas, fill_value=0)
 
-        print(count_misbuilds)
+ 
         count_misbuilds.loc['Total'] = count_misbuilds.sum(numeric_only=True)
         count_misbuilds_data =[['Count of Misbuilds']]
         count_misbuilds_data += [['Description'] + count_misbuilds.columns.tolist()]
@@ -1002,7 +1004,7 @@ async def Defect(
             df8['Historical Week'],
             colnames=['Historical Week']
         ).reindex(columns=semanas_unicas, fill_value=0)
-        print(count_misbuilds8)
+ 
         count_misbuilds8.columns = [col.replace('Week ', 'W') for col in count_misbuilds8.columns]
         count_misbuilds8.loc['Total'] = count_misbuilds8.sum(numeric_only=True)
         #count_misbuilds_data8 =[['Count of Misbuilds']]
