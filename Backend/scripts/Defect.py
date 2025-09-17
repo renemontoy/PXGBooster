@@ -1069,7 +1069,7 @@ async def Defect(
         ax2 = ax1.twinx()
 
         # Gráfico de Total de ordenes (eje derecho - azul)
-        ax2.plot(df_weekly['Week'], df_weekly['Total Orders'], 
+        ax2.plot(df_weekly8['Week'], df_weekly8['Total Orders'], 
                 label='Total Orders', 
                 color='blue', 
                 marker='o', 
