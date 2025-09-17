@@ -1041,7 +1041,7 @@ async def Defect(
         #GRAFICA
         # Gráfico de líneas
         misbuilds_counts = df[df['Type'] == 'FRMISBUILD'].groupby('Historical Week').size()
-        misbuilds_counts = misbuilds_counts.reindex(df_weekly['Week'], fill_value=0)
+        misbuilds_counts = misbuilds_counts.reindex(df_weekly8['Week'], fill_value=0)
         # 2. Calcular el promedio móvil de 4 semanas
         misbuilds_4wk_avg = misbuilds_counts.rolling(window=4, min_periods=1).mean()
         # Crear figura y eje principal (misbuilds)
