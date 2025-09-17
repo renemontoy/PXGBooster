@@ -46,7 +46,7 @@ async def Defect(
 
         semana_actual = f" Week {semana_seleccionada}"
 
-        grh = 11
+        grh = 12
 
         #Catalogo de defectos
         defect_type = {
