@@ -15,6 +15,11 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.units import cm, mm 
 import matplotlib.pyplot as plt
 import io
+import logging
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 async def Defect(
         file: UploadFile = File(...),
@@ -102,6 +107,8 @@ async def Defect(
         }
         
         df["Type"] = df["Claim Type (Description)"].map(defect_type)
+
+        
 
         df = df[["Date:", "Historical Week", "Year Week", "Shipper:", "Original Order or Serial #", "RMA", "RC", "Status? (0,1,2)","Shipping Carrier","Tracking Number",
                 "Staged", "Make / Model", "Claim Type (Description)", "Type", "Pod Number", "Original Build Shop","Original Sales Order Date", "Days" ]]
@@ -239,14 +246,28 @@ async def Defect(
         current_week_num = int(semana_seleccionada.replace('Week ', ''))
         fourweeks = [f'Week {i}' for i in range(current_week_num-3, current_week_num+1)]
         eightweeks = [f'Week {i}' for i in range(current_week_num-7, current_week_num+1)]
+
         all_previous_weeks = [f'Week {i}' for i in range(1, current_week_num + 1)]
         df = df[df['Historical Week'].isin(all_previous_weeks)]
         df8 = df[df['Historical Week'].isin(eightweeks)]
         df4 = df[df['Historical Week'].isin(fourweeks)]
 
+
         #Staged
         story.append(Paragraph("Summary", custom_title_style))
         staged = pd.crosstab(df4['Staged'], df4['Historical Week'])
+        # REORDENAR las columnas numéricamente después del cross-tab
+        def sort_week_columns(df):
+            """Ordenar columnas de semanas numéricamente"""
+            week_cols = [col for col in df.columns if col.startswith('Week')]
+            week_cols_sorted = sorted(week_cols, key=lambda x: int(x.split()[1]))
+            
+            # Reordenar el DataFrame manteniendo columnas que no son semanas
+            non_week_cols = [col for col in df.columns if not col.startswith('Week')]
+            return df[non_week_cols + week_cols_sorted]
+        
+        staged = sort_week_columns(staged)
+   
         staged.loc['Total'] = staged.sum(numeric_only=True)
         #Data
         staged_data = [['Count of Staged by Week']]
@@ -258,7 +279,7 @@ async def Defect(
         row_heights_staged = [grh] * num_filas_staged
         staged_table = Table(staged_data, colWidths=[100, 60, 60, 60, 60], repeatRows=1, rowHeights=row_heights_staged)
         staged_table.setStyle(TableStyle(table_style))
-
+        
         #Avg Staged
         week_cols = [col for col in staged.columns if col.startswith('Week')]
         # Calcular TOTAL
@@ -284,6 +305,7 @@ async def Defect(
         dfwarranty = df4[df4['Staged'] == 'Warranty']
         dfwarranty8 = df8[df8['Staged'] == 'Warranty']
         warranty8 = pd.crosstab(dfwarranty8['Type'], df8['Historical Week'])
+        warranty8 = sort_week_columns(warranty8)
         warranty = warranty8.iloc[:, -4:].copy()
         warranty.loc['Total'] = warranty.sum(axis=0)
         warranty_data = [['Warranty Details']]
@@ -295,7 +317,6 @@ async def Defect(
         row_heights_w = [grh] * num_filas_w
         warranty_table = Table(warranty_data, colWidths=[100, 60, 60, 60, 60], repeatRows=1, rowHeights=row_heights_w)
         warranty_table.setStyle(TableStyle(table_style))
-
         #Avg Details
         warranty['TOTAL'] = warranty[week_cols].sum(axis=1)
         non_null_weeks_warranty = warranty[week_cols].notnull().sum(axis=1)
@@ -378,7 +399,7 @@ async def Defect(
         df_transposed = df_transposed[df_transposed['Historical Week'].isin(all_previous_weeks)]
         prod4 = df_transposed[df_transposed['Historical Week'].isin(fourweeks)]
         prod8 = df_transposed[df_transposed['Historical Week'].isin(eightweeks)]
-
+        
 
         # Agrupar por 'Historical Week' y sumar Orders/ShippedQty
         df_weekly = prod4.groupby('Historical Week', as_index=False).agg({
@@ -388,11 +409,16 @@ async def Defect(
         })
         # Renombrar columnas para claridad
         df_weekly.columns = ['Week', 'Total Orders', 'Total ShippedQty', 'Start Date', 'End Date']
+
+        df_weekly['Week_Num'] = df_weekly['Week'].str.extract('(\d+)').astype(int)
+        df_weekly = df_weekly.sort_values('Week_Num')
+        df_weekly = df_weekly.drop('Week_Num', axis=1)
+
         # Formatear fechas como "DD-MMM" (ej: "22-Apr")
         df_weekly['Start Date'] = df_weekly['Start Date'].dt.strftime('%d-%b')
         df_weekly['End Date'] = df_weekly['End Date'].dt.strftime('%d-%b')
         # Ordenar por semana (opcional)
-        df_weekly = df_weekly.sort_values('Week', ascending=True)
+        #df_weekly = df_weekly.sort_values('Week', ascending=True)
         #Production Data
         prod_data = [
             ["Production data"],
@@ -482,6 +508,7 @@ async def Defect(
 
         #WEEKLY ORDERS
         orders_hist = pd.crosstab(dfwarranty8['Type'], df['Historical Week'])
+        orders_hist = sort_week_columns(orders_hist)
         # Suma de ordenes por semana
         weekly_orders_totals = df_weekly.set_index('Week')['Total Orders']
 
@@ -591,11 +618,12 @@ async def Defect(
         #DATA
         #Warranty Details
         warranty_hist1 = pd.crosstab(df['Type'], df['Historical Week'])
-
+        warranty_hist1 = sort_week_columns(warranty_hist1)
         # CORRECCIÓN: Usar warranty_hist en lugar de warranty
         warranty_hist1.loc['Total'] = warranty_hist1.sum(numeric_only=True)
 
         warranty_hist8 = pd.crosstab(df8['Type'], df8['Historical Week'])
+        warranty_hist8 = sort_week_columns(warranty_hist8)
         warranty_hist8.columns = [col.replace('Week ', 'W') for col in warranty_hist8.columns]
         warranty_hist8.loc['Total'] = warranty_hist8.sum(numeric_only=True)
         # 2. Preparar datos para el DataFrame
@@ -779,6 +807,8 @@ async def Defect(
         })
         # Renombrar columnas para claridad
         df_weekly8.columns = ['Week', 'Total Orders', 'Total ShippedQty','Start Date', 'End Date',]
+
+
         # Formatear fechas como "DD-MMM" (ej: "22-Apr")
         df_weekly8['Start Date'] = df_weekly8['Start Date'].dt.strftime('%d-%b')
         df_weekly8['End Date'] = df_weekly8['End Date'].dt.strftime('%d-%b')
@@ -788,6 +818,11 @@ async def Defect(
         }
         df_weekly8 = df_weekly8.rename(columns=rename_columns_weekly8)
         df_weekly8 = df_weekly8 [['Week', 'Start Date', 'End Date', 'ASM Clubs', 'ASM Orders']]
+
+        df_weekly8['Week_Num'] = df_weekly8['Week'].str.extract('(\d+)').astype(int)
+        df_weekly8 = df_weekly8.sort_values('Week_Num')
+        df_weekly8 = df_weekly8.drop('Week_Num', axis=1)
+
         df_weekly8_data = [df_weekly8.columns.tolist()]
         df_weekly8_data += df_weekly8.values.tolist()
         num_filas_df_weekly8_data = len(df_weekly8_data)
@@ -882,6 +917,11 @@ async def Defect(
             colnames=['Historical Week']
         ).reindex(columns=ultimas_4_semanas, fill_value=0)
 
+        rename_columns = {
+            'Historical Week' : 'Week'
+        }
+        count_misbuilds = count_misbuilds.rename(columns=rename_columns)
+        count_misbuilds = sort_week_columns(count_misbuilds)
  
         count_misbuilds.loc['Total'] = count_misbuilds.sum(numeric_only=True)
         count_misbuilds_data =[['Count of Misbuilds']]
@@ -1004,7 +1044,11 @@ async def Defect(
             df8['Historical Week'],
             colnames=['Historical Week']
         ).reindex(columns=semanas_unicas, fill_value=0)
- 
+        rename_columns = {
+            'Historical Week' : 'Week'
+        }
+        count_misbuilds8 = count_misbuilds8.rename(columns=rename_columns)
+        count_misbuilds8 = sort_week_columns(count_misbuilds8)
         count_misbuilds8.columns = [col.replace('Week ', 'W') for col in count_misbuilds8.columns]
         count_misbuilds8.loc['Total'] = count_misbuilds8.sum(numeric_only=True)
         #count_misbuilds_data8 =[['Count of Misbuilds']]
@@ -1129,8 +1173,12 @@ async def Defect(
 
 
     except UnicodeDecodeError:
+        logger.error("UnicodeDecodeError", exc_info=True)
         raise HTTPException(status_code=400, detail="Error de codificación. Intente guardar los archivos como UTF-8 BOM")
     except pd.errors.ParserError:
-        raise HTTPException(status_code=400, detail="Error al analizar el CSV. Verifique el delimitador (usar coma o punto y coma)")
+        logger.error("ParserError", exc_info=True)
+        raise HTTPException(status_code=400, detail="Error al analizar el CSV. Verifique el delimitador")
     except Exception as e:
+        logger.error(f"Error inesperado: {str(e)}", exc_info=True)
+        # Para desarrollo, incluir más detalles
         raise HTTPException(status_code=500, detail=f"Error inesperado: {str(e)}")
