@@ -824,7 +824,9 @@ async def Defect(
         df_weekly8 = df_weekly8.rename(columns=rename_columns_weekly8)
         df_weekly8 = df_weekly8 [['Week', 'Start Date', 'End Date', 'ASM Clubs', 'ASM Orders']]
 
-        ##############################
+        df_weekly8['Week_Num'] = df_weekly8['Week'].str.extract('(\d+)').astype(int)
+        df_weekly8 = df_weekly8.sort_values('Week_Num')
+        df_weekly8 = df_weekly8.drop('Week_Num', axis=1)
 
         df_weekly8_data = [df_weekly8.columns.tolist()]
         df_weekly8_data += df_weekly8.values.tolist()
