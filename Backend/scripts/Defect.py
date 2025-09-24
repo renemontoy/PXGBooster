@@ -471,11 +471,16 @@ async def Defect(
 
         # Renombrar columnas para claridad
         df_weekly8.columns = ['Week', 'Total Orders', 'Total ShippedQty', 'Start Date', 'End Date']
+
+        df_weekly8['Week_Num'] = df_weekly8['Week'].str.extract('(\d+)').astype(int)
+        df_weekly8 = df_weekly8.sort_values('Week_Num')
+        df_weekly8 = df_weekly8.drop('Week_Num', axis=1)
+
         # Formatear fechas como "DD-MMM" (ej: "22-Apr")
         df_weekly8['Start Date'] = df_weekly8['Start Date'].dt.strftime('%d-%b')
         df_weekly8['End Date'] = df_weekly8['End Date'].dt.strftime('%d-%b')
         # Ordenar por semana (opcional)
-        df_weekly8 = df_weekly8.sort_values('Week', ascending=True)
+        #df_weekly8 = df_weekly8.sort_values('Week', ascending=True)
         #Avg Details
         # 1. Calcular métricas para ASM Clubs y Orders
         start_date8 = df_weekly8['Start Date'].iloc[0]
@@ -819,9 +824,7 @@ async def Defect(
         df_weekly8 = df_weekly8.rename(columns=rename_columns_weekly8)
         df_weekly8 = df_weekly8 [['Week', 'Start Date', 'End Date', 'ASM Clubs', 'ASM Orders']]
 
-        df_weekly8['Week_Num'] = df_weekly8['Week'].str.extract('(\d+)').astype(int)
-        df_weekly8 = df_weekly8.sort_values('Week_Num')
-        df_weekly8 = df_weekly8.drop('Week_Num', axis=1)
+        ##############################
 
         df_weekly8_data = [df_weekly8.columns.tolist()]
         df_weekly8_data += df_weekly8.values.tolist()
