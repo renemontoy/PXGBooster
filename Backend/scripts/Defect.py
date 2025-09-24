@@ -18,8 +18,8 @@ import io
 import logging
 
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+#logging.basicConfig(level=logging.DEBUG)
+#logger = logging.getLogger(__name__)
 
 async def Defect(
         file: UploadFile = File(...),
@@ -366,8 +366,10 @@ async def Defect(
         df_transposed['ShippedQty'] = (
             df_transposed['ShippedQty']
             .astype(str)  # Convertir todo a string primero
-            .str.replace('[.,]', '', regex=True)  # Eliminar puntos y comas
-            .replace('nan', np.nan)  # Mantener NaN como valores nulos
+            .str.replace('[^\d.]', '', regex=True)  # Mantener solo números y punto decimal
+            .replace('', np.nan)
+            .astype(float)
+            .round(0)  # Redondear a enteros
             .astype('Int64')  # Tipo nullable integer de pandas
         ) # Eliminar comas
         #Agreagar semanas
@@ -399,7 +401,6 @@ async def Defect(
         df_transposed = df_transposed[df_transposed['Historical Week'].isin(all_previous_weeks)]
         prod4 = df_transposed[df_transposed['Historical Week'].isin(fourweeks)]
         prod8 = df_transposed[df_transposed['Historical Week'].isin(eightweeks)]
-        
 
         # Agrupar por 'Historical Week' y sumar Orders/ShippedQty
         df_weekly = prod4.groupby('Historical Week', as_index=False).agg({
@@ -413,7 +414,7 @@ async def Defect(
         df_weekly['Week_Num'] = df_weekly['Week'].str.extract('(\d+)').astype(int)
         df_weekly = df_weekly.sort_values('Week_Num')
         df_weekly = df_weekly.drop('Week_Num', axis=1)
-
+        
         # Formatear fechas como "DD-MMM" (ej: "22-Apr")
         df_weekly['Start Date'] = df_weekly['Start Date'].dt.strftime('%d-%b')
         df_weekly['End Date'] = df_weekly['End Date'].dt.strftime('%d-%b')
@@ -428,6 +429,7 @@ async def Defect(
             ["ASM Clubs"] + [f"{x:,.0f}" for x in df_weekly['Total ShippedQty']],
             ["Orders"] + [f"{x:,.0f}" for x in df_weekly['Total Orders']]
         ]
+        
         num_filas_prod = len(prod_data)
         row_heights_prod = [grh] * num_filas_prod
         prod_tabla = Table(prod_data, colWidths=[100, 60, 60, 60, 60], repeatRows=1, rowHeights=row_heights_prod)
