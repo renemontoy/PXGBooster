@@ -28,7 +28,7 @@ async def Ferrule(
         df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-3', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-3']
         df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-4', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-4']
         df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-5', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-5']
-        df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-6', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-6']
+        #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-6', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-6']
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-7', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-7']
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-8', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-8']
 
