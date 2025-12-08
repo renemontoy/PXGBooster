@@ -7,6 +7,7 @@ from scripts.GlobalP import GlobalPayments
 from scripts.Spec import Spec
 from scripts.Defect import Defect
 from scripts.Loomis import Loomis
+from scripts.ValidationMS import ValidationMS 
 
 router = APIRouter()
 
@@ -25,6 +26,13 @@ async def procesar(
     paymentmethod: str = Form(...)
 ):
     return await Adyen(file, file2, deposit, account, depositdate, period, paymentmethod)
+
+@router.post("/uploadmsmanifest/")
+async def procesar(
+    file: UploadFile = File(...),
+    file2: UploadFile = File(...),
+):
+    return await ValidationMS(file, file2)
 
 @router.post("/uploadcanada")
 async def procesar(

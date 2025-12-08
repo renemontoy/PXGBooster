@@ -45,6 +45,11 @@ export function PXG() {
       title: "Loomis",
       imageUrl: "/images/PXG4.jpg",
       route: "/Loomis"
+    },
+    {
+      title: "Validation MS",
+      imageUrl: "/images/PXG3.jpg",
+      route: "/ValidationMS"
     }
   ];
 

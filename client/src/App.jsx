@@ -9,6 +9,7 @@ import { GlobalPayments } from "./pages/GlobalP";
 import { Spec } from "./pages/Spec";
 import { Defect } from "./pages/Defect&Warranty";
 import { Loomis } from "./pages/Loomis";
+import { ValidationMS} from "./pages/ValidationMs";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
           <Route path="GlobalPayments" element={<GlobalPayments />} />
           <Route path="Spec" element={<Spec />} />
           <Route path="Defect" element={<Defect />} />  
-          <Route path="Loomis" element={<Loomis />} />          
+          <Route path="Loomis" element={<Loomis />} /> 
+          <Route path="ValidationMS" element={<ValidationMS />} />          
         </Route>
       </Routes>
     </BrowserRouter>
