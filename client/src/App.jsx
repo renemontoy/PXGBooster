@@ -10,6 +10,8 @@ import { Spec } from "./pages/Spec";
 import { Defect } from "./pages/Defect&Warranty";
 import { Loomis } from "./pages/Loomis";
 import { ValidationMS} from "./pages/ValidationMs";
+import { Tsys } from "./pages/Tsys";
+import { Brett } from "./pages/Brett";
 
 function App() {
   return (
@@ -29,7 +31,10 @@ function App() {
           <Route path="Spec" element={<Spec />} />
           <Route path="Defect" element={<Defect />} />  
           <Route path="Loomis" element={<Loomis />} /> 
-          <Route path="ValidationMS" element={<ValidationMS />} />          
+          <Route path="ValidationMS" element={<ValidationMS />} />  
+          <Route path="Tsys" element={<Tsys />} />  
+          <Route path="UnifyExcel" element={<Brett />} />  
+
         </Route>
       </Routes>
     </BrowserRouter>

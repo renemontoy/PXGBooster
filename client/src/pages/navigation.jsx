@@ -7,19 +7,24 @@ import Slider from 'react-slick';
 export function PXG() {
   const cardsData = [
     {
-      title: "Adyen",
+      title: "Adyen Bank Deposits",
       imageUrl: "/images/PXG1.jpg",
       route: "/Adyen"
     },
     {
-      title: "Shopify",
+      title: "Shopify Bank Depostis",
       imageUrl: "/images/PXG2.jpg",
       route: "/Shopify"
     },
     {
-      title: "Global Payments",
+      title: "Global Payments Deposits",
       imageUrl: "/images/PXG3.jpg",
       route: "/GlobalPayments"
+    },
+    {
+      title: "GP & AMEX",
+      imageUrl: "/images/PXG7.jpg",
+      route: "/Tsys"
     },
     {
       title: "Canada",
@@ -32,17 +37,17 @@ export function PXG() {
       route: "/Ferrule"
     },
     {
-      title: "Defect & Warranty",
+      title: "Defect & Warranty Reporter",
       imageUrl: "/images/PXG6.jpg",
       route: "/Defect"
     },
     {
-      title: "Spec Check Analysis",
+      title: "Spec Check Analysis Reporter",
       imageUrl: "/images/PXG7.jpg",
       route: "/Spec"
     },
     {
-      title: "Loomis",
+      title: "Loomis Deposits",
       imageUrl: "/images/PXG4.jpg",
       route: "/Loomis"
     },
@@ -50,7 +55,13 @@ export function PXG() {
       title: "Validation MS",
       imageUrl: "/images/PXG3.jpg",
       route: "/ValidationMS"
+    },
+    {
+      title: "Unify Excel",
+      imageUrl: "/images/PXG6.jpg",
+      route: "/UnifyExcel"
     }
+
   ];
 
   const sliderSettings = {

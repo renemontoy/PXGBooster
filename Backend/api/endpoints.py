@@ -8,6 +8,7 @@ from scripts.Spec import Spec
 from scripts.Defect import Defect
 from scripts.Loomis import Loomis
 from scripts.ValidationMS import ValidationMS 
+from scripts.Brett import Brett
 
 router = APIRouter()
 
@@ -88,3 +89,18 @@ async def procesar(
     depositdate: str = Form(...),
 ):
     return await Loomis(file, depositdate)
+
+@router.post("/tsysdeposits")
+async def procesar(
+    file: UploadFile = File(...),
+    file2: UploadFile = File(...),
+    username: str = Form(...),
+    password: str = Form(...),
+):
+    return await Loomis(file, file2, username, password)
+
+@router.post("/uploadbrett")
+async def procesar(
+    file: UploadFile = File(...),
+):
+    return await Brett(file)
