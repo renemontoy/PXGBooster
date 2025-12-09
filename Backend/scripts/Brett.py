@@ -118,7 +118,7 @@ async def Brett(
         # Create an Excel file with multiple sheets
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df_unificado.to_excel(writer, sheet_name='Master', index=False)
+            df_unificado.to_excel(writer, index=False)
             
 
         output.seek(0)
