@@ -56,6 +56,11 @@ export function PXG() {
       imageUrl: "/images/PXG3.jpg",
       route: "/ValidationMS"
     },
+        {
+      title: "Validation Receipt",
+      imageUrl: "/images/PXG4.jpg",
+      route: "/ValidationReceipt"
+    },
     {
       title: "Unify Excel",
       imageUrl: "/images/PXG6.jpg",

@@ -12,6 +12,7 @@ import { Loomis } from "./pages/Loomis";
 import { ValidationMS} from "./pages/ValidationMs";
 import { Tsys } from "./pages/Tsys";
 import { Brett } from "./pages/Brett";
+import { ValidationReceipt } from "./pages/Receipt";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="Loomis" element={<Loomis />} /> 
           <Route path="ValidationMS" element={<ValidationMS />} />  
           <Route path="Tsys" element={<Tsys />} />  
+          <Route path="ValidationReceipt" element={<ValidationReceipt />} />  
           <Route path="UnifyExcel" element={<Brett />} />  
 
         </Route>

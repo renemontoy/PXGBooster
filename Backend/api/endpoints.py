@@ -9,6 +9,8 @@ from scripts.Defect import Defect
 from scripts.Loomis import Loomis
 from scripts.ValidationMS import ValidationMS 
 from scripts.Brett import Brett
+from scripts.Receipt import ValidationReceipt
+from typing import List
 
 router = APIRouter()
 
@@ -34,6 +36,13 @@ async def procesar(
     file2: UploadFile = File(...),
 ):
     return await ValidationMS(file, file2)
+
+@router.post("/uploadreceipt/")
+async def procesar(
+    transfers_files: List[UploadFile] = File(...),          
+    ies_files: List[UploadFile] = File(...),    
+):
+    return await ValidationReceipt(transfers_files, ies_files)
 
 @router.post("/uploadcanada")
 async def procesar(

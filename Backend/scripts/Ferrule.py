@@ -17,7 +17,7 @@ async def Ferrule(
         df3 = df.copy()
         df4 = df.copy()
         df5 = df.copy()
-        ctr = 1
+        ctr = 0
 
         #Cambiar S-ACCR-ISTL-GRN-125-X-9, S-ACCR-ISTL-GRN-125-X-W por S-ACCR-ISTL-GRN-125-X-9W
         df['Inventory Identifier'] = df['Inventory Identifier'].str.strip()
@@ -27,10 +27,11 @@ async def Ferrule(
         #Cambios 115 a 100
         df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-3', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-3']
         df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-4', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-4']
-        df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-5', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-5']
+        #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-5', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-5']
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-6', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-6']
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-7', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-7']
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-8', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-8']
+        df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-9W', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-9W']
 
         #Convertir Kist de weighkit a piezas
         #df.loc[df['Inventory Identifier'] == 'A-WEIGHTKIT-DRIVER', ['Shipped Qty']] *= 8
