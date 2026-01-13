@@ -7,7 +7,6 @@ from fastapi import UploadFile, File, HTTPException # pyright: ignore[reportMiss
 import numpy as np
 from typing import List
 from io import BytesIO
-
 async def ValidationReceipt(
     transfers_files: List[UploadFile] = File(...),          
     ies_files: List[UploadFile] = File(...),        
@@ -76,6 +75,15 @@ async def ValidationReceipt(
         combined_ies = combined_ies.groupby(['Inventory ID','Description'], as_index=False)['Quantity'].sum()
         combined_ies['Inventory ID'] =  combined_ies['Inventory ID'].str.replace("'","",regex=False)
         #print(combined_ies)
+
+        pattern = r'^(B-|GB|G4|H-|PB)'
+
+        mask = combined_transfers['Inventory ID'].astype(str).str.match(pattern)
+
+        combined_transfers.loc[mask, 'Inventory ID'] = (
+            combined_transfers.loc[mask, 'Inventory ID'].astype(str) + '-MS'
+        )
+
 
         # Merge
         dfmerge = pd.merge(combined_transfers,combined_ies,on='Inventory ID',how='outer')
