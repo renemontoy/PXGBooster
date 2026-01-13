@@ -37,7 +37,7 @@ async def procesar(
 ):
     return await ValidationMS(file, file2)
 
-@router.post("/uploadreceipt/")
+@router.post("/uploadreceipt")
 async def procesar(
     transfers_files: List[UploadFile] = File(...),          
     ies_files: List[UploadFile] = File(...),    
