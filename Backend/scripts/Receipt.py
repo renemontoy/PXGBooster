@@ -86,7 +86,7 @@ async def ValidationReceipt(
             dfmerge['Diference'] == 0,
             dfmerge['Diference'] < 0
         ]
-        choices = ['Revisar', 'Revisar','Correcto', 'Revisar']
+        choices = ['Revisar', 'Correcto', 'Revisar']
         dfmerge['status'] = np.select(conditions,choices,default='Revisar')
 
         dfmerge = dfmerge.rename(columns={
