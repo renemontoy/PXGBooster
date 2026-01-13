@@ -78,17 +78,16 @@ async def ValidationReceipt(
         #print(combined_ies)
 
         # Merge
-        dfmerge = pd.merge(combined_transfers, combined_ies, on='Inventory ID', how='outer')
+        dfmerge = pd.merge(combined_transfers,combined_ies,on='Inventory ID',how='outer')
         dfmerge['Diference'] = dfmerge['Quantity_x'].fillna(0) - dfmerge['Quantity_y'].fillna(0)
 
         conditions = [
-            dfmerge['Diference'].isna(),
             dfmerge['Diference'] > 0,
             dfmerge['Diference'] == 0,
             dfmerge['Diference'] < 0
         ]
         choices = ['Revisar', 'Revisar','Correcto', 'Revisar']
-        dfmerge['status'] = np.select(conditions, choices)
+        dfmerge['status'] = np.select(conditions,choices,default='Revisar')
 
         dfmerge = dfmerge.rename(columns={
             'Description_x':'Description',
