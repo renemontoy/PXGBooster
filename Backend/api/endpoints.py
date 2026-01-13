@@ -42,26 +42,6 @@ async def procesar(
     transfers_files: List[UploadFile] = File(...),          
     ies_files: List[UploadFile] = File(...),    
 ):
-    # Verificar que hay archivos
-    if not transfers_files or not ies_files:
-        raise HTTPException(
-            status_code=400, 
-            detail="Debe proporcionar ambos tipos de archivos"
-        )
-    
-    # Verificar límites de Render (100MB por defecto)
-    total_size = 0
-    for file in transfers_files + ies_files:
-        # Guardar el contenido en memoria para no perderlo
-        setattr(file, "_content", await file.read())
-        total_size += len(file._content)
-    
-    if total_size > 50 * 1024 * 1024:  # 50MB límite recomendado
-        raise HTTPException(
-            status_code=413, 
-            detail="Tamaño total de archivos excede el límite de 50MB"
-        )
-    
     return await ValidationReceipt(transfers_files, ies_files)
 
 
