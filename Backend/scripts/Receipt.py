@@ -76,7 +76,7 @@ async def ValidationReceipt(
         combined_ies['Inventory ID'] =  combined_ies['Inventory ID'].str.replace("'","",regex=False)
         #print(combined_ies)
 
-        pattern = r'^(B-|GB|G4|H-|PB)'
+        pattern = r'^(B-|GB|G4|H-|PB|A-J)'
 
         mask = combined_transfers['Inventory ID'].astype(str).str.match(pattern)
 
