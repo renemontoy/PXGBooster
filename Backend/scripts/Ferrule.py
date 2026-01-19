@@ -17,7 +17,7 @@ async def Ferrule(
         df3 = df.copy()
         df4 = df.copy()
         df5 = df.copy()
-        ctr = 0
+        ctr = 1
 
         #Cambiar S-ACCR-ISTL-GRN-125-X-9, S-ACCR-ISTL-GRN-125-X-W por S-ACCR-ISTL-GRN-125-X-9W
         df['Inventory Identifier'] = df['Inventory Identifier'].str.strip()
