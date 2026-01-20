@@ -374,31 +374,33 @@ async def Defect(
         ) # Eliminar comas
         #Agreagar semanas
         def convert_date(date_str):
-            # Lista de años posibles a intentar
-            possible_years = [2025, 2026]
-            
-            for year in possible_years:
-                # Intentar con el formato preferido primero
-                try:
-                    return pd.to_datetime(date_str + f'-{year}', format='%b %d-%Y')
-                except ValueError:
-                    pass
-                
-                # Intentar con formato sin espacio
-                try:
-                    return pd.to_datetime(date_str + f'-{year}', format='%b-%d-%Y')
-                except ValueError:
-                    pass
-            
-            # Si ningún año funciona, intentar parsing automático
+            # Primero intenta parsear como viene (por si ya tiene año)
             try:
                 return pd.to_datetime(date_str, format='mixed', dayfirst=False)
             except:
-                # Último recurso: intentar sin especificar año
+                pass
+            
+            # Si llegamos aquí, asumimos que solo tiene mes y día (ej: "Jan 01")
+            try:
+                # Convertir a fecha sin año
+                temp_date = pd.to_datetime(date_str, format='%b %d')
+                
+                # Aplicar tu lógica: julio-dic = 2025, ene-jun = 2026
+                if temp_date.month >= 7:  # Julio a Diciembre
+                    return temp_date.replace(year=2025)
+                else:  # Enero a Junio
+                    return temp_date.replace(year=2026)
+                    
+            except:
+                # Último intento con formato alternativo
                 try:
-                    # Asumir el año actual si el parsing falla
-                    return pd.to_datetime(date_str, errors='coerce')
+                    temp_date = pd.to_datetime(date_str, format='%b-%d')
+                    if temp_date.month >= 7:
+                        return temp_date.replace(year=2025)
+                    else:
+                        return temp_date.replace(year=2026)
                 except:
+                    # Si todo falla, devolver NaT
                     return pd.NaT
 
         # Aplicar la conversión robusta
