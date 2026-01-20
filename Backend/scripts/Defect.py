@@ -374,20 +374,32 @@ async def Defect(
         ) # Eliminar comas
         #Agreagar semanas
         def convert_date(date_str):
-            # Intenta con el formato preferido primero
-            try:
-                return pd.to_datetime(date_str + '-2025', format='%b %d-%Y')
-            except ValueError:
-                # Fallback 1: Formato sin espacio (ej: "jul-01-2025")
+            # Lista de años posibles a intentar
+            possible_years = [2025, 2026]
+            
+            for year in possible_years:
+                # Intentar con el formato preferido primero
                 try:
-                    return pd.to_datetime(date_str + '-2025', format='%b-%d-%Y')
+                    return pd.to_datetime(date_str + f'-{year}', format='%b %d-%Y')
+                except ValueError:
+                    pass
+                
+                # Intentar con formato sin espacio
+                try:
+                    return pd.to_datetime(date_str + f'-{year}', format='%b-%d-%Y')
+                except ValueError:
+                    pass
+            
+            # Si ningún año funciona, intentar parsing automático
+            try:
+                return pd.to_datetime(date_str, format='mixed', dayfirst=False)
+            except:
+                # Último recurso: intentar sin especificar año
+                try:
+                    # Asumir el año actual si el parsing falla
+                    return pd.to_datetime(date_str, errors='coerce')
                 except:
-                    # Fallback 2: Formato ISO (ej: "2025-07-01")
-                    try:
-                        return pd.to_datetime(date_str, format='ISO8601')
-                    except:
-                        # Fallback 3: Intento automático
-                        return pd.to_datetime(date_str, format='mixed', dayfirst=False)
+                    return pd.NaT
 
         # Aplicar la conversión robusta
         df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
