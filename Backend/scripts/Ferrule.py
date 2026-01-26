@@ -19,6 +19,8 @@ async def Ferrule(
         df5 = df.copy()
         ctr = 0
 
+        df = df[df["ShipmentStatus"] != 'Total general']
+
         #Cambiar S-ACCR-ISTL-GRN-125-X-9, S-ACCR-ISTL-GRN-125-X-W por S-ACCR-ISTL-GRN-125-X-9W
         df['Inventory Identifier'] = df['Inventory Identifier'].str.strip()
         df.loc[df['Inventory Identifier'] == 'S-ACCR-ISTL-GRN-125-X-9', ['Inventory Identifier']] = ['S-ACCR-ISTL-GRN-125-X-9W']
@@ -601,11 +603,21 @@ async def Ferrule(
             df5shaft.columns = encabezados
 
             #Unificacion y creacion del nuevo archivo
-            df6 = pd.concat([df, df2shaft, df3shaft, df4shaft,df5shaft])
-            df6 = df6.sort_values(by=['ShipmentNbr','Line ID'])
+            df6 = pd.concat([df, df2shaft, df3shaft, df5shaft])
+            w = "T-TIPWEIGHT-4G"
+            q = 119
+            dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
+            qlineas= dffiltro.head(q)
+            qlineas['Inventory Identifier'] = w
+            qlineas['Descr (INItemClass)'] ='Build Materials'
+            qlineas['Shipped Clubs'] = 0
+            qlineas['Shipped Qty'] = 1
+            df7 = pd.concat([df6, qlineas])
+            df7 ['Shipment Nbr Count'] = 1
 
+            df7 = df7.sort_values(by=['ShipmentNbr','Line ID'])
             output = io.BytesIO()
-            df6.to_csv(output, encoding='utf-16', sep='\t', index=False)
+            df7.to_csv(output, encoding='utf-16', sep='\t', index=False)
             output.seek(0)
             return StreamingResponse(
                 output,
@@ -638,10 +650,20 @@ async def Ferrule(
 
             #Unificacion y creacion del nuevo archivo
             df6 = pd.concat([df, df2shaft, df3shaft, df5shaft])
-            df6 = df6.sort_values(by=['ShipmentNbr','Line ID'])
+            w = "T-TIPWEIGHT-4G"
+            q = 119
+            dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
+            qlineas= dffiltro.head(q).copy()
+            qlineas['Inventory Identifier'] = w
+            qlineas['Descr (INItemClass)'] ='Build Materials'
+            qlineas['Shipped Clubs'] = 0
+            qlineas['Shipped Qty'] = 1
+            df7 = pd.concat([df6, qlineas])
+            df7 ['Shipment Nbr Count'] = 1
 
+            df7 = df7.sort_values(by=['ShipmentNbr','Line ID'])
             output = io.BytesIO()
-            df6.to_csv(output, encoding='utf-16', sep='\t', index=False)
+            df7.to_csv(output, encoding='utf-16', sep='\t', index=False)
             output.seek(0)
             return StreamingResponse(
                 output,
