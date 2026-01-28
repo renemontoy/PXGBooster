@@ -13,13 +13,15 @@ async def Ferrule(
         tequila_details = await file.read()
         # Intentamos leer el archivo como DataFrame especificando la codificación
         df = pd.read_csv(io.BytesIO(tequila_details), encoding='utf-16', delimiter='\t')
+        df = df[df["ShipmentStatus"] != 'Total general']
+        df = df[df["ShipmentStatus"] != 'Grand Total']
         df2 = df.copy()
         df3 = df.copy()
         df4 = df.copy()
         df5 = df.copy()
         ctr = 0
 
-        df = df[df["ShipmentStatus"] != 'Total general']
+
 
         #Cambiar S-ACCR-ISTL-GRN-125-X-9, S-ACCR-ISTL-GRN-125-X-W por S-ACCR-ISTL-GRN-125-X-9W
         df['Inventory Identifier'] = df['Inventory Identifier'].str.strip()
@@ -650,6 +652,7 @@ async def Ferrule(
 
             #Unificacion y creacion del nuevo archivo
             df6 = pd.concat([df, df2shaft, df3shaft, df5shaft])
+            df6['Shipped Clubs'] = pd.to_numeric(df6['Shipped Clubs'], errors='coerce')
             w = "T-TIPWEIGHT-4G"
             q = 119
             dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
