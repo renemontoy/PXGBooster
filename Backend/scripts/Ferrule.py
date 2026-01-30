@@ -656,32 +656,32 @@ async def Ferrule(
             df6['Shipped Clubs'] = pd.to_numeric(df6['Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
-            w = "T-TIPWEIGHT-4G"
-            q = 1100
-            dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
-            qlineas= dffiltro.head(q).copy()
-            qlineas['Inventory Identifier'] = w
-            qlineas['Descr (INItemClass)'] ='Build Materials'
-            qlineas['Shipped Clubs'] = 0
-            qlineas['Shipped Qty'] = 1
-            df7 = pd.concat([df6, qlineas])
-            df7 ['Shipment Nbr Count'] = 1
+            #w = "T-TIPWEIGHT-4G"
+            #q = 1100
+            #dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
+            #qlineas= dffiltro.head(q).copy()
+            #qlineas['Inventory Identifier'] = w
+            #qlineas['Descr (INItemClass)'] ='Build Materials'
+            #qlineas['Shipped Clubs'] = 0
+            #qlineas['Shipped Qty'] = 1
+            #df7 = pd.concat([df6, qlineas])
+            #df7 ['Shipment Nbr Count'] = 1
 
             #AGREGANDO SEGUNDO TIPWEIGHT
-            we = "T-TIPWEIGHT-3G"
-            qu = 503
-            dffiltro2 = df7.loc[df7["Shipped Clubs"] == 1]
-            qlineas2 = dffiltro2.head(qu).copy()
-            qlineas2["Inventory Identifier"] = we
-            qlineas2['Descr (INItemClass)'] ='Build Materials'
-            qlineas2['Shipped Clubs'] = 0
-            qlineas2['Shipped Qty'] = 1
-            df8 = pd.concat([df7,qlineas2])
-            df8 ['Shipment Nbr Count'] = 1
+            #we = "T-TIPWEIGHT-3G"
+            #qu = 503
+            #dffiltro2 = df7.loc[df7["Shipped Clubs"] == 1]
+            #qlineas2 = dffiltro2.head(qu).copy()
+            #qlineas2["Inventory Identifier"] = we
+            #qlineas2['Descr (INItemClass)'] ='Build Materials'
+            #qlineas2['Shipped Clubs'] = 0
+            #qlineas2['Shipped Qty'] = 1
+            #df8 = pd.concat([df7,qlineas2])
+            #df8 ['Shipment Nbr Count'] = 1
             
-            df8 = df8.sort_values(by=['ShipmentNbr','Line ID'])
+            df6 = df6.sort_values(by=['ShipmentNbr','Line ID'])
             output = io.BytesIO()
-            df8.to_csv(output, encoding='utf-16', sep='\t', index=False)
+            df6.to_csv(output, encoding='utf-16', sep='\t', index=False)
             output.seek(0)
             return StreamingResponse(
                 output,
