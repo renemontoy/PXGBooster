@@ -373,38 +373,23 @@ async def Defect(
             .astype('Int64')  # Tipo nullable integer de pandas
         ) # Eliminar comas
         #Agreagar semanas
+
         def convert_date(date_str):
-            # Primero intenta parsear como viene (por si ya tiene año)
             try:
-                return pd.to_datetime(date_str, format='mixed', dayfirst=False)
-            except:
-                pass
-            
-            # Si llegamos aquí, asumimos que solo tiene mes y día (ej: "Jan 01")
-            try:
-                # Convertir a fecha sin año
-                temp_date = pd.to_datetime(date_str, format='%b %d')
+                # Convertir fecha sin año (formato día-mes)
+                temp_date = pd.to_datetime(date_str, format='%d-%b')
                 
-                # Aplicar tu lógica: julio-dic = 2025, ene-jun = 2026
+                # Aplicar lógica de año
                 if temp_date.month >= 7:  # Julio a Diciembre
                     return temp_date.replace(year=2025)
                 else:  # Enero a Junio
                     return temp_date.replace(year=2026)
-                    
             except:
-                # Último intento con formato alternativo
-                try:
-                    temp_date = pd.to_datetime(date_str, format='%b-%d')
-                    if temp_date.month >= 7:
-                        return temp_date.replace(year=2025)
-                    else:
-                        return temp_date.replace(year=2026)
-                except:
-                    # Si todo falla, devolver NaT
-                    return pd.NaT
-
+                # Si falla, devolver NaT
+                return pd.NaT
         # Aplicar la conversión robusta
         df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
+
         #df_transposed['Fecha'] = pd.to_datetime(df_transposed['Fecha'] + '-2025', format='%b %d-%Y')
         df_transposed["semana_relativa"] = (((df_transposed['Fecha'] - fechainicio).dt.days // 7) + 1).astype("Int64")
         df_transposed["Historical Week"] = 'Week ' + df_transposed["semana_relativa"].astype(str) 
@@ -428,6 +413,8 @@ async def Defect(
         df_weekly['Week_Num'] = df_weekly['Week'].str.extract('(\d+)').astype(int)
         df_weekly = df_weekly.sort_values('Week_Num')
         df_weekly = df_weekly.drop('Week_Num', axis=1)
+
+
         
         # Formatear fechas como "DD-MMM" (ej: "22-Apr")
         df_weekly['Start Date'] = df_weekly['Start Date'].dt.strftime('%d-%b')
