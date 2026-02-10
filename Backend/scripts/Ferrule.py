@@ -605,7 +605,7 @@ async def Ferrule(
             df5shaft.columns = encabezados
 
             #Unificacion y creacion del nuevo archivo
-            df6 = pd.concat([df, df2shaft, df3shaft, df5shaft])
+            df6 = pd.concat([df, df2shaft, df3shaft, df4shaft, df5shaft])
             df6['Shipped Clubs'] = pd.to_numeric(df6['Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
