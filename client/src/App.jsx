@@ -13,6 +13,7 @@ import { ValidationMS} from "./pages/ValidationMs";
 import { Tsys } from "./pages/Tsys";
 import { Brett } from "./pages/Brett";
 import { ValidationReceipt } from "./pages/Receipt";
+import { OOR } from "./pages/OOR";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
           <Route path="Tsys" element={<Tsys />} />  
           <Route path="ValidationReceipt" element={<ValidationReceipt />} />  
           <Route path="UnifyExcel" element={<Brett />} />  
-
+          <Route path="OOR" element={<OOR />} /> 
         </Route>
       </Routes>
     </BrowserRouter>

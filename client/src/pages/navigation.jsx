@@ -65,6 +65,11 @@ export function PXG() {
       title: "Unify Excel",
       imageUrl: "/images/PXG6.jpg",
       route: "/UnifyExcel"
+    },
+    {
+      title: "OOR",
+      imageUrl: "/images/PXG5.jpg",
+      route: "/OOR"
     }
 
   ];

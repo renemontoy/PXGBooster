@@ -2326,7 +2326,13 @@ async def ValidationReceipt(
             "WR-PXG8-CHR-58-10S",
             "WR-PXG8-CHR-58-13BP",
             "WR-PXG8-CHR-60-10S",
-            "WR-PXG8-CHR-60-13BP"
+            "WR-PXG8-CHR-60-13BP",
+            "S-PX-DNLIFRST-BLU-HYB-80-6.5",
+            "WR-PXG8-BLK-50-10S",
+            "B-PG-172-XSHLD-WHT-MS",
+            "G-TT-ICON-PXG-UND-BLK",
+            "WR-PXG8-BLK-54-10S",
+            "WR-PXG8-CHR-54-13BP"
         ]
 
         dfmerge['Nuevo Np'] = dfmerge['Inventory ID'].apply(

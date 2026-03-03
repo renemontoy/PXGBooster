@@ -10,6 +10,7 @@ from scripts.Loomis import Loomis
 from scripts.ValidationMS import ValidationMS 
 from scripts.Brett import Brett
 from scripts.Receipt import ValidationReceipt
+from scripts.OOR import OOR
 from typing import List
 
 router = APIRouter()
@@ -114,3 +115,9 @@ async def procesar(
     file: UploadFile = File(...),
 ):
     return await Brett(file)
+
+@router.post("/uploadoor")
+async def procesar(
+    file: UploadFile = File(...),
+):
+    return await OOR(file)
