@@ -38,7 +38,7 @@ async def Ferrule(
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-9W', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-9W']
 
         #Convertir Kist de weighkit a piezas
-        #df.loc[df['Inventory Identifier'] == 'A-WEIGHTKIT-DRIVER', ['Shipped Qty']] *= 8
+        #df.loc[df['Inventory Identifier'] == 'A-WEIGHTKIT-DRIVER', ['Max. ShippedQty']] *= 8
 
         #Preparando data Iron
         df2['ID'] = df2['Finished Good Name'].str[:1]
@@ -304,8 +304,8 @@ async def Ferrule(
 
         #Limpieza de data Iron
         shaftdf2 = df2.loc[df2['Descripcion'] == 'Build Materials']
-        df2shaft = shaftdf2.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Shipped Qty','Shipped Clubs'])
-        encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Shipped Qty','Shipped Clubs']
+        df2shaft = shaftdf2.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Max. ShippedQty','Max. Shipped Clubs'])
+        encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Max. ShippedQty','Max. Shipped Clubs']
         df2shaft.columns = encabezados
 
         #Preparando data Wedge
@@ -386,8 +386,8 @@ async def Ferrule(
 
         #Lumpia de datos Wedge
         shaftdf3 = df3.loc[df3['Descripcion'] == 'Build Materials']
-        df3shaft = shaftdf3.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Shipped Qty','Shipped Clubs'])
-        encabezados3 = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Shipped Qty','Shipped Clubs']
+        df3shaft = shaftdf3.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Max. ShippedQty','Max. Shipped Clubs'])
+        encabezados3 = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Max. ShippedQty','Max. Shipped Clubs']
         df3shaft.columns = encabezados3
 
         if ctr == 1: 
@@ -580,8 +580,8 @@ async def Ferrule(
 
             #Limpieza de data A-SHAFT-CTR-PC
             shaftdf4 = df4.loc[df4['Descripcion'] == 'Build Materials']
-            df4shaft = shaftdf4.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Shipped Qty','Shipped Clubs'])
-            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Shipped Qty','Shipped Clubs']
+            df4shaft = shaftdf4.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Max. ShippedQty','Max. Shipped Clubs'])
+            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Max. ShippedQty','Max. Shipped Clubs']
             df4shaft.columns = encabezados
 
             #Preparando Data T-PUTTER FERRULE 1
@@ -600,35 +600,35 @@ async def Ferrule(
 
             #Limpieza de data T-PUTTER FERRULE 1
             shaftdf5 = df5.loc[df5['Descripcion'] == 'Build Materials']
-            df5shaft = shaftdf5.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Shipped Qty','Shipped Clubs'])
-            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Shipped Qty','Shipped Clubs']
+            df5shaft = shaftdf5.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Max. ShippedQty','Max. Shipped Clubs'])
+            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Max. ShippedQty','Max. Shipped Clubs']
             df5shaft.columns = encabezados
 
             #Unificacion y creacion del nuevo archivo
             df6 = pd.concat([df, df2shaft, df3shaft, df4shaft, df5shaft])
-            df6['Shipped Clubs'] = pd.to_numeric(df6['Shipped Clubs'], errors='coerce')
+            df6['Max. Shipped Clubs'] = pd.to_numeric(df6['Max. Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
             #w = "T-TIPWEIGHT-4G"
             #q = 400
-            #dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
+            #dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             #qlineas= dffiltro.head(q).copy()
             #qlineas['Inventory Identifier'] = w
             #qlineas['Descr (INItemClass)'] ='Build Materials'
-            #qlineas['Shipped Clubs'] = 0
-            #qlineas['Shipped Qty'] = 1
+            #qlineas['Max. Shipped Clubs'] = 0
+            #qlineas['Max. ShippedQty'] = 1
             #df7 = pd.concat([df6, qlineas])
             #df7 ['Shipment Nbr Count'] = 1
 
             #AGREGANDO SEGUNDO TIPWEIGHT
             #we = "T-TIPWEIGHT-3G"
             #qu = 500
-            #dffiltro2 = df7.loc[df7["Shipped Clubs"] == 1]
+            #dffiltro2 = df7.loc[df7["Max. Shipped Clubs"] == 1]
             #qlineas2 = dffiltro2.head(qu).copy()
             #qlineas2["Inventory Identifier"] = we
             #qlineas2['Descr (INItemClass)'] ='Build Materials'
-            #qlineas2['Shipped Clubs'] = 0
-            #qlineas2['Shipped Qty'] = 1
+            #qlineas2['Max. Shipped Clubs'] = 0
+            #qlineas2['Max. ShippedQty'] = 1
             #df8 = pd.concat([df7,qlineas2])
             #df8 ['Shipment Nbr Count'] = 1
 
@@ -665,35 +665,35 @@ async def Ferrule(
 
             #Limpieza de data T-PUTTER FERRULE 1
             shaftdf5 = df5.loc[df5['Descripcion'] == 'Build Materials']
-            df5shaft = shaftdf5.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Shipped Qty','Shipped Clubs'])
-            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Shipped Qty','Shipped Clubs']
+            df5shaft = shaftdf5.reindex(columns=['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Parte','Descripcion','Max. ShippedQty','Max. Shipped Clubs'])
+            encabezados = ['ShipmentStatus','ShipmentNbr','Line ID','Finished Good Name','Inventory Identifier','Descr (INItemClass)','Max. ShippedQty','Max. Shipped Clubs']
             df5shaft.columns = encabezados
 
             #Unificacion y creacion del nuevo archivo
             df6 = pd.concat([df, df2shaft, df3shaft, df5shaft])
-            df6['Shipped Clubs'] = pd.to_numeric(df6['Shipped Clubs'], errors='coerce')
+            df6['Max. Shipped Clubs'] = pd.to_numeric(df6['Max. Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
             #w = "T-TIPWEIGHT-2G"
             #q = 200
-            #dffiltro = df6.loc[df6["Shipped Clubs"] == 1]
+            #dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             #qlineas= dffiltro.head(q).copy()
             #qlineas['Inventory Identifier'] = w
             #qlineas['Descr (INItemClass)'] ='Build Materials'
-            #qlineas['Shipped Clubs'] = 0
-            #qlineas['Shipped Qty'] = 1
+            #qlineas['Max. Shipped Clubs'] = 0
+            #qlineas['Max. ShippedQty'] = 1
             #df7 = pd.concat([df6, qlineas])
             #df7 ['Shipment Nbr Count'] = 1
 
             #AGREGANDO SEGUNDO TIPWEIGHT
             #we = "T-GEN8IRWGT-SIL-3G"
             #qu = 100
-            #dffiltro2 = df7.loc[df7["Shipped Clubs"] == 1]
+            #dffiltro2 = df7.loc[df7["Max. Shipped Clubs"] == 1]
             #qlineas2 = dffiltro2.head(qu).copy()
             #qlineas2["Inventory Identifier"] = we
             #qlineas2['Descr (INItemClass)'] ='Build Materials'
-            #qlineas2['Shipped Clubs'] = 0
-            #qlineas2['Shipped Qty'] = 1
+            #qlineas2['Max. Shipped Clubs'] = 0
+            #qlineas2['Max. ShippedQty'] = 1
             #df8 = pd.concat([df7,qlineas2])
             #df8 ['Shipment Nbr Count'] = 1
 
