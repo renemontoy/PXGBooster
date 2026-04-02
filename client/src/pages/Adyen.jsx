@@ -36,7 +36,7 @@ export function AdyenUploadPage() {
     formData.append('deposit', deposit);
     formData.append('account', '10250');
     formData.append('depositdate', date);
-    formData.append('period', '03-2026');
+    formData.append('period', '04-2026');
     formData.append('paymentmethod', 'ADYEN');
 
     toast.promise(
