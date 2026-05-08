@@ -609,8 +609,8 @@ async def Ferrule(
             df6['Max. Shipped Clubs'] = pd.to_numeric(df6['Max. Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
-            w = "T-GEN8IRWGT-SIL-3G"
-            q = 400
+            w = "T-TIPWEIGHT-2G"
+            q = 1100
             dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             qlineas= dffiltro.head(q).copy()
             qlineas['Inventory Identifier'] = w
