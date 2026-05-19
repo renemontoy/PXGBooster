@@ -38,7 +38,7 @@ async def Ferrule(
         #df.loc[df['Inventory Identifier'] == 'S-KBS-STPERLITE100-S-9W', ['Inventory Identifier']] = ['S-KBS-STPERLITE115-S-9W']
 
         #Convertir Kist de weighkit a piezas
-        #df.loc[df['Inventory Identifier'] == 'A-WEIGHTKIT-DRIVER', ['Max. ShippedQty']] *= 8
+        df.loc[df['Inventory Identifier'] == 'A-WEIGHTKIT-DRIVER', ['Max. ShippedQty']] *= 9
 
         #Preparando data Iron
         df2['ID'] = df2['Finished Good Name'].str[:1]
