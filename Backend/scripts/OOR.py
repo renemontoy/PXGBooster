@@ -162,7 +162,7 @@ async def OOR(
                 
                 #print(f"✅ {col}: {len(df_temp)} filas con diferencias")
             else:
-                print(f"ℹ️ {col}: No hay diferencias")
+                print("No hay diferencias")
 
         # Acceder a cada dataframe individualmente
         df_diff_po = dfs_diferencias.get('PO Number')
