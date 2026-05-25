@@ -207,15 +207,6 @@ async def OOR(
                 pd.DataFrame({'Mensaje': ['No hay órdenes cerradas']}).to_excel(writer, sheet_name='Ordenes_Cerradas', index=False)
                 print(f"ℹ️ Hoja 'Ordenes_Cerradas' creada (sin datos)")
 
-        # Guardar el archivo
-        with open('diferencias_por_columna.xlsx', 'wb') as f:
-            f.write(output.getvalue())
-
-        print("\n✅ Archivo Excel creado: 'diferencias_por_columna.xlsx'")
-        print("📊 Hojas incluidas:")
-        print("  - Diferencias por columna (Material_Sku, PO_Qty, Current_Unit_Price, etc.)")
-        print("  - Ordenes_Nuevas")
-        print("  - Ordenes_Cerradas")
                     
 
         output.seek(0)
