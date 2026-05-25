@@ -40,7 +40,7 @@ export function OOR() {
             'Content-Type': 'multipart/form-data', 
           },
           responseType: 'blob', 
-          withCredentials: false 
+          withCredentials: true 
         }),
         {
           loading: 'Processing...',
