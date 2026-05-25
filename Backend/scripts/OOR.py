@@ -45,18 +45,18 @@ async def OOR(
         po_depure1 = openorders[~openorders['PO Number'].isin(OORexcel['PO Number'])]
         ordenes_cerradas = po_depure1.copy()
         lista_ordenes_cerradas = ordenes_cerradas['PO Number'].unique().tolist()
-        print(f"PO ordenes cerradas: {lista_ordenes_cerradas}")
+        #print(f"PO ordenes cerradas: {lista_ordenes_cerradas}")
 
         po_depure2 = OORexcel[~OORexcel['PO Number'].isin(openorders['PO Number'])]
         nuevas_ordenes = po_depure2.copy()
         lista_ordenes_nuevas = nuevas_ordenes['PO Number'].unique().tolist()
-        print(f"PO ordenes nuevas: {lista_ordenes_nuevas}")
+        #print(f"PO ordenes nuevas: {lista_ordenes_nuevas}")
 
         openorders = openorders[openorders['PO Number'].isin(OORexcel['PO Number'])].copy()
         OORexcel = OORexcel[OORexcel['PO Number'].isin(openorders['PO Number'])].copy()
 
-        print(f"PO únicos originales en openorders: {openorders['PO Number'].nunique()}")
-        print(f"PO únicos originales en OORexcel: {OORexcel['PO Number'].nunique()}")
+        #print(f"PO únicos originales en openorders: {openorders['PO Number'].nunique()}")
+        #print(f"PO únicos originales en OORexcel: {OORexcel['PO Number'].nunique()}")
 
         # 1. Obtener la frecuencia de cada PO Number en ambos dataframes
         frecuencia_openorders = openorders['PO Number'].value_counts().reset_index()
@@ -160,7 +160,7 @@ async def OOR(
                 # Guardar en el diccionario
                 dfs_diferencias[col] = df_temp
                 
-                print(f"✅ {col}: {len(df_temp)} filas con diferencias")
+                #print(f"✅ {col}: {len(df_temp)} filas con diferencias")
             else:
                 print(f"ℹ️ {col}: No hay diferencias")
 
@@ -194,19 +194,19 @@ async def OOR(
             # Agregar hoja de Órdenes Nuevas
             if df_ordenes_nuevas is not None and len(df_ordenes_nuevas) > 0:
                 df_ordenes_nuevas.to_excel(writer, sheet_name='Ordenes_Nuevas', index=False)
-                print(f"✅ Hoja 'Ordenes_Nuevas' agregada ({len(df_ordenes_nuevas)} filas)")
+                #print(f"✅ Hoja 'Ordenes_Nuevas' agregada ({len(df_ordenes_nuevas)} filas)")
             else:
                 pd.DataFrame({'Mensaje': ['No hay órdenes nuevas']}).to_excel(writer, sheet_name='Ordenes_Nuevas', index=False)
-                print(f"ℹ️ Hoja 'Ordenes_Nuevas' creada (sin datos)")
+                #print(f"ℹ️ Hoja 'Ordenes_Nuevas' creada (sin datos)")
             
             # Agregar hoja de Órdenes Cerradas
             if df_ordenes_cerradas is not None and len(df_ordenes_cerradas) > 0:
                 df_ordenes_cerradas.to_excel(writer, sheet_name='Ordenes_Cerradas', index=False)
-                print(f"✅ Hoja 'Ordenes_Cerradas' agregada ({len(df_ordenes_cerradas)} filas)")
+                #print(f"✅ Hoja 'Ordenes_Cerradas' agregada ({len(df_ordenes_cerradas)} filas)")
             else:
                 pd.DataFrame({'Mensaje': ['No hay órdenes cerradas']}).to_excel(writer, sheet_name='Ordenes_Cerradas', index=False)
-                print(f"ℹ️ Hoja 'Ordenes_Cerradas' creada (sin datos)")
-
+                #print(f"ℹ️ Hoja 'Ordenes_Cerradas' creada (sin datos)")
+    
                     
 
         output.seek(0)
