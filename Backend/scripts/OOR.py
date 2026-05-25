@@ -120,7 +120,7 @@ async def OOR(
                 col_df2 = f'{col}_OORexcel'
                 df_comparado[f'{col}_igual'] = df_comparado[col_df1] == df_comparado[col_df2]
 
-        excel = df_comparado.to_excel('comparacion_final.xlsx', index=False)
+        #excel = df_comparado.to_excel('comparacion_final.xlsx', index=False)
 
         # Diccionario para almacenar los dataframes de diferencias
         dfs_diferencias = {}
