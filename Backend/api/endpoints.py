@@ -119,5 +119,6 @@ async def procesar(
 @router.post("/uploadoor")
 async def procesar(
     file: UploadFile = File(...),
+    file2: UploadFile = File(...)
 ):
-    return await OOR(file)
+    return await OOR(file, file2)
