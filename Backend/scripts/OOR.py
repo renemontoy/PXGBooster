@@ -2,6 +2,7 @@ import pandas as pd
 import io
 from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
 from fastapi import UploadFile, File, HTTPException # pyright: ignore[reportMissingImports]
+import traceback
 
 async def OOR(
     file: UploadFile = File(...),          # ACMA (Excel)
@@ -242,4 +243,5 @@ async def OOR(
     except pd.errors.ParserError:
         raise HTTPException(status_code=400, detail="Error al analizar el US Chase.")
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error inesperado: {str(e)}")
