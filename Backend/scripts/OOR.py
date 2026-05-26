@@ -29,9 +29,24 @@ async def OOR(
         
         openorders = openorders[['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price']]
 
-        openorders['Material Sku'] = openorders['Material Sku'].str.strip()
-        openorders['PO Qty'] = openorders['PO Qty'].str.replace(',', '')
-        openorders['PO Qty'] = pd.to_numeric(openorders['PO Qty'], errors='coerce')
+        openorders['Material Sku'] = (
+            openorders['Material Sku']
+            .fillna('')
+            .astype(str)
+            .str.strip()
+        )
+
+        openorders['PO Qty'] = (
+            openorders['PO Qty']
+            .fillna('')
+            .astype(str)
+            .str.replace(',', '', regex=False)
+        )
+
+        openorders['PO Qty'] = pd.to_numeric(
+            openorders['PO Qty'],
+            errors='coerce'
+        )
 
         OORexcel = OORexcel[OORexcel['PO Number'] != 'PO Number']
 
