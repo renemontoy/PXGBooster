@@ -64,18 +64,20 @@ export function OOR() {
         // Limpiar después de la descarga
         link.parentNode.removeChild(link);
         window.URL.revokeObjectURL(url);
-      }).catch(async (error) => {
-  console.error('Error uploading file:', error);
-
-  if (error.response?.data) {
-    try {
-      const text = await error.response.data.text();
-      console.error("SERVER ERROR:", text);
-    } catch (e) {
-      console.error("Could not parse blob error");
-    }
-  }
-});
+      }).catch((error) => {
+        console.error('Error uploading file:', error);
+        if (error.response) {
+          // El servidor respondió con un código de estado fuera del rango 2xx
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+        } else if (error.request) {
+          // La solicitud se hizo, pero no se recibió respuesta
+          console.error('Request data:', error.request);
+        } else {
+          // Ocurrió un error al configurar la solicitud
+          console.error('Error message:', error.message);
+        }
+      });
     };
 
   return (

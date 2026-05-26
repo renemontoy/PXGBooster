@@ -18,7 +18,7 @@ async def OOR(
         openordersfile = await file2.read()
 
         # Procesar OOR (Excel) - Versión robusta
-        OORexcel = pd.read_excel(io.BytesIO(OORexcelfile), engine='openpyxl', sheet_name='Open Orders ')
+        OORexcel = pd.read_excel(io.BytesIO(OORexcelfile), engine='openpyxl', sheet_name='Open Orders')
         openorders = pd.read_csv(io.BytesIO(openordersfile),encoding='utf-16', sep='\t')
         OORexcel = OORexcel[['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price']]
         
