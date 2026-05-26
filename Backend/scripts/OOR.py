@@ -117,8 +117,15 @@ async def OOR(
         OORexcel_reset = OORexcel.reset_index(drop=True)
 
         #Redondear a dos decimales para igualar formatos
-        openorders_reset['Current Unit Price'] = openorders_reset['Current Unit Price'].round(2)
-        OORexcel_reset['Current Unit Price'] = OORexcel_reset['Current Unit Price'].round(2)
+        openorders_reset['Current Unit Price'] = pd.to_numeric(
+            openorders_reset['Current Unit Price'],
+            errors='coerce'
+        ).round(2)
+
+        OORexcel_reset['Current Unit Price'] = pd.to_numeric(
+            OORexcel_reset['Current Unit Price'],
+            errors='coerce'
+        ).round(2)
 
         # Crear un identificador de fila
         openorders_reset['fila_id'] = openorders_reset.index
@@ -233,11 +240,19 @@ async def OOR(
                 'Content-Disposition': 'attachment; filename="OOR_Validation.xlsx"'
             }
         )
-    #except Exception as e:
-    #    print(f"ERROR: {str(e)}")
-    #    import traceback
-   #     traceback.print_exc()
-   #     raise HTTPException(status_code=500, detail=f"Error inesperado: {str(e)}")
+    except Exception as e:
+        traceback.print_exc()
+
+        print("========== ERROR ==========")
+        print(type(e))
+        print(repr(e))
+        print(str(e))
+        print("===========================")
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(e).__name__}: {str(e)}"
+        )
     except UnicodeDecodeError:
         raise HTTPException(status_code=400, detail="Error de codificación.")
     except pd.errors.ParserError:
