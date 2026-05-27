@@ -219,7 +219,7 @@ async def OOR(
                 df_ordenes_nuevas.to_excel(writer, sheet_name='Ordenes_Cerradas', index=False)
                 #print(f"✅ Hoja 'Ordenes_Nuevas' agregada ({len(df_ordenes_nuevas)} filas)")
             else:
-                pd.DataFrame({'Mensaje': ['No hay órdenes nuevas']}).to_excel(writer, sheet_name='Ordenes_Cerradas', index=False)
+                pd.DataFrame({'Mensaje': ['No hay órdenes nuevas']}).to_excel(writer, sheet_name='Closed_Orders', index=False)
                 #print(f"ℹ️ Hoja 'Ordenes_Nuevas' creada (sin datos)")
             
             # Agregar hoja de Órdenes Cerradas
@@ -227,7 +227,7 @@ async def OOR(
                 df_ordenes_cerradas.to_excel(writer, sheet_name='Faltantes_OOR', index=False)
                 #print(f"✅ Hoja 'Ordenes_Cerradas' agregada ({len(df_ordenes_cerradas)} filas)")
             else:
-                pd.DataFrame({'Mensaje': ['No hay órdenes cerradas']}).to_excel(writer, sheet_name='Faltantes_OOR', index=False)
+                pd.DataFrame({'Mensaje': ['No hay órdenes cerradas']}).to_excel(writer, sheet_name='Missing_OOR', index=False)
                 #print(f"ℹ️ Hoja 'Ordenes_Cerradas' creada (sin datos)")
     
                     
