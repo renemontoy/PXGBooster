@@ -233,11 +233,11 @@ async def Spec(
             value = row[3]
             if value == 'NA':
                 bg_color = colors.white
-            elif isinstance(value, (int, float)) and 0 <= value < 95:
+            elif isinstance(value, (int, float)) and 0 <= value < 84:
                 bg_color = Color(0.8, 0.3, 0.3)  
-            elif isinstance(value, (int, float)) and 96 <= value <= 96:
+            elif isinstance(value, (int, float)) and 85 <= value <= 94:
                 bg_color = Color(0.8984, 0.4101, 0.4375)
-            elif isinstance(value, (int, float)) and 97 <= value <= 100:
+            elif isinstance(value, (int, float)) and 95 <= value <= 100:
                 bg_color = Color(0.3, 0.7, 0.3) 
             else:
                 bg_color = colors.white
