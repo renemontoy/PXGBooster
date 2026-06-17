@@ -681,7 +681,7 @@ async def Ferrule(
 
             #AGREGAR PRIMER TIPWEIGHT
             w = "T-GEN8IRWGT-SIL-5G"
-            q = 1681
+            q = 900
             dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             qlineas= dffiltro.head(q).copy()
             qlineas['Inventory Identifier'] = w
@@ -692,8 +692,8 @@ async def Ferrule(
             df7 ['Shipment Nbr Count'] = 1
 
             #AGREGANDO SEGUNDO TIPWEIGHT
-            we = "T-TIPWEIGHT-2G"
-            qu = 838
+            we = "T-TIPWEIGHT-3G"
+            qu = 800
             dffiltro2 = df7.loc[df7["Max. Shipped Clubs"] == 1]
             qlineas2 = dffiltro2.head(qu).copy()
             qlineas2["Inventory Identifier"] = we

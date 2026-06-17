@@ -19,16 +19,102 @@ async def OOR(
 
         # Procesar OOR (Excel) - Versión robusta
         OORexcel = pd.read_excel(io.BytesIO(OORexcelfile), engine='openpyxl', sheet_name='Open Orders ')
-        openorders = pd.read_csv(io.BytesIO(openordersfile),encoding='utf-16', sep='\t')
-        OORexcel = OORexcel[['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price']]
+        promised_date_column = OORexcel.columns[13]
+        columnasOORexcel = ['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price','Ship to', 'MOT']
+        columnasseleccionar = columnasOORexcel + [promised_date_column]
+        OORexcel = OORexcel[columnasseleccionar]
+        #OORexcel = OORexcel[OORexcel['PO Number'] != 'PO Number']
+        OORexcel = OORexcel.rename(columns={promised_date_column: 'Shipped Date'})
         
+        OORexcel['Shipped Date'] = pd.to_datetime(OORexcel['Shipped Date'], errors='coerce').dt.date
+        OORexcel['Day'] = pd.to_datetime(OORexcel['Shipped Date'], errors='coerce').dt.day_name()
+
+        openorders = pd.read_csv(io.BytesIO(openordersfile),encoding='utf-16', sep='\t')       
         openorders = openorders.rename(columns={'Order Nbr': 'PO Number', 
                                         'Line Nbr': 'Line Number', 
                                         'Inventory CD': 'Material Sku', 
                                         'Order Qty': 'PO Qty', 
                                         'Avg. UnitCostUSD': 'Current Unit Price'})
         
-        openorders = openorders[['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price']]
+        openorders = openorders[['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price','Promised Date']]
+        openorders['Promised Date'] = pd.to_datetime(openorders['Promised Date'], errors='coerce').dt.date
+        openorders['Day'] = pd.to_datetime(openorders['Promised Date'], errors='coerce').dt.day_name()
+        
+        #Trabajo de fechas
+                #MOT US
+        usof = 40
+        usaf = 14
+        uspafe = 7
+
+        #MOT UK
+        ukof = 50
+        ukaf = 14
+        ukpafe = 7
+
+        #MOTJP
+        jpof = 14
+        jpaf = 10
+        jppafe = 7
+
+        #MOT DISTRIBUTION
+        dist= 0
+
+        OORexcel['CONCAT'] = OORexcel['Ship to'].astype(str) + '-' + OORexcel['MOT'].astype(str)
+
+        mapeo_dias = {
+            # MOT US
+            'USA-FBLCL': usof, #REVISAR
+            'USA-Ocean': usof,
+            'USA-AF': usaf,
+            'USA-Fedex IE': uspafe,
+            
+            # MOT UK
+            'UK-FBLCL': ukof, #REVISAR
+            'UK-Ocean': ukof,
+            'UK-AF': ukaf,
+            'UK-Fedex IE': ukpafe,
+            
+            # MOT JP
+            'JP-FBLCL': jpof, #REVISAR
+            'JP-Ocean': jpof,
+            'JP-AF': jpaf,
+            'JP-Fedex IE': jppafe,
+
+            # MOT DISTRIBUTION
+            'DIST': dist
+        }
+        # Aplicar mapeo: los valores no encontrados usan dist (0)
+        OORexcel['Dias_a_Sumar'] = OORexcel['CONCAT'].map(mapeo_dias).fillna(dist)
+
+        # Calcular nueva fecha
+        OORexcel['Shipped Date'] = pd.to_datetime(OORexcel['Shipped Date'])
+        OORexcel['Nueva_Fecha'] = OORexcel['Shipped Date'] + pd.to_timedelta(OORexcel['Dias_a_Sumar'], unit='D')
+
+        #OORexcel = OORexcel[OORexcel['PO Number'] != 'PO Number']
+        OORexcel['Day'] = OORexcel['Nueva_Fecha'].dt.day_name()
+
+        #Suma por dias
+        sat= 6
+        sun= 5
+        mon= 4
+        tue= 3
+        wed= 2
+        thu= 1
+        fri= 0
+
+        mapeo_dias_semana = {
+            'Saturday': sat,
+            'Sunday': sun,
+            'Monday': mon,
+            'Tuesday': tue,
+            'Wednesday': wed,
+            'Thursday': thu,
+            'Friday': fri
+        }
+
+        OORexcel['Dias_a_Sumar_Semana'] = OORexcel['Day'].map(mapeo_dias_semana).fillna(0)
+        OORexcel['Promised Date'] = OORexcel['Nueva_Fecha'] + pd.to_timedelta(OORexcel['Dias_a_Sumar_Semana'], unit='D')
+        OORexcel['Promised Date'] = OORexcel['Promised Date'].dt.day_name()
 
         openorders['Material Sku'] = (
             openorders['Material Sku']
@@ -149,7 +235,7 @@ async def OOR(
         dfs_diferencias = {}
 
         # Lista de columnas que estás comparando
-        columnas_comparadas = ['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price']
+        columnas_comparadas = ['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price', 'Promised Date']
 
         # Crear un dataframe por cada columna que tenga diferencias
         for col in columnas_comparadas:
