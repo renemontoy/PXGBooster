@@ -20,7 +20,7 @@ async def OOR(
         # Procesar OOR (Excel) - Versión robusta
         OORexcel = pd.read_excel(io.BytesIO(OORexcelfile), engine='openpyxl', sheet_name='Open Orders ')
         promised_date_column = OORexcel.columns[13]
-        columnasOORexcel = ['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price','Ship to', 'MOT']
+        columnasOORexcel = ['PO Number', 'Line Number', 'Material Sku', 'PO Qty', 'Current Unit Price','Ship to', 'Shipping Origin','MOT']
         columnasseleccionar = columnasOORexcel + [promised_date_column]
         OORexcel = OORexcel[columnasseleccionar]
         #OORexcel = OORexcel[OORexcel['PO Number'] != 'PO Number']
@@ -45,6 +45,8 @@ async def OOR(
         usof = 40
         usaf = 14
         uspafe = 7
+        usfbvn = 31
+        usfbcn = 25
 
         #MOT UK
         ukof = 50
@@ -59,29 +61,41 @@ async def OOR(
         #MOT DISTRIBUTION
         dist= 0
 
-        OORexcel['CONCAT'] = OORexcel['Ship to'].astype(str) + '-' + OORexcel['MOT'].astype(str)
+        OORexcel['CONCAT'] = OORexcel['Shipping Origin'].astype(str) + '-' + OORexcel['Ship to'].astype(str) + '-' + OORexcel['MOT'].astype(str)
 
         mapeo_dias = {
             # MOT US
-            'USA-FBLCL': usof, #REVISAR
-            'USA-Ocean': usof,
-            'USA-AF': usaf,
-            'USA-Fedex IE': uspafe,
-            'USA-FedEx IE': uspafe,
+            'China-USA-FBLCL': usfbcn,
+            'Vietnam-USA-FBLCL': usfbvn, 
+            'China-USA-Ocean': usof,
+            'Vietnam-USA-Ocean': usof,
+            'China-USA-AF': usaf,
+            'Vietnam-USA-AF': usaf,
+            'China-USA-Fedex IE': uspafe,
+            'Vietnam-USA-Fedex IE': uspafe,
+            'China-USA-FedEx IE': uspafe,
+            'Vietnam-USA-FedEx IE': uspafe,
+
             
             # MOT UK
-            'UK-FBLCL': ukof, #REVISAR
-            'UK-Ocean': ukof,
-            'UK-AF': ukaf,
-            'UK-FedEx IE': ukpafe, 
-            'UK-Fedex IE': uspafe, 
-            
-            # MOT JP
-            'JP-FBLCL': jpof, #REVISAR
-            'JP-Ocean': jpof,
-            'JP-AF': jpaf,
-            'JP-FedEx IE': jppafe,
-            'JP-Fedex IE': uspafe,
+            'China-UK-Ocean': ukof,
+            'Vietnam-UK-Ocean': ukof,
+            'China-UK-AF': ukaf,
+            'Vietnam-UK-AF': ukaf,
+            'China-UK-FedEx IE': ukpafe,
+            'Vietnam-UK-FedEx IE': ukpafe, 
+            'China-UK-Fedex IE': uspafe,
+            'Vietnam-UK-Fedex IE': uspafe, 
+    
+            # MOT JP 
+            'China-JP-Ocean': jpof,
+            'Vietnam-JP-Ocean': jpof,
+            'China-JP-AF': jpaf,
+            'Vietnam-JP-AF': jpaf,
+            'China-JP-FedEx IE': jppafe,
+            'Vietnam-JP-FedEx IE': jppafe,
+            'China-JP-Fedex IE': uspafe,
+            'Vietnam-JP-Fedex IE': uspafe,
 
             # MOT DISTRIBUTION
             'DIST': dist
