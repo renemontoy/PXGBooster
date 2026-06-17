@@ -67,18 +67,21 @@ async def OOR(
             'USA-Ocean': usof,
             'USA-AF': usaf,
             'USA-Fedex IE': uspafe,
+            'USA-FedEx IE': uspafe,
             
             # MOT UK
             'UK-FBLCL': ukof, #REVISAR
             'UK-Ocean': ukof,
             'UK-AF': ukaf,
-            'UK-Fedex IE': ukpafe,
+            'UK-FedEx IE': ukpafe, 
+            'UK-Fedex IE': uspafe, 
             
             # MOT JP
             'JP-FBLCL': jpof, #REVISAR
             'JP-Ocean': jpof,
             'JP-AF': jpaf,
-            'JP-Fedex IE': jppafe,
+            'JP-FedEx IE': jppafe,
+            'JP-Fedex IE': uspafe,
 
             # MOT DISTRIBUTION
             'DIST': dist
