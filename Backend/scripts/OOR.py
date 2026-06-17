@@ -114,7 +114,7 @@ async def OOR(
 
         OORexcel['Dias_a_Sumar_Semana'] = OORexcel['Day'].map(mapeo_dias_semana).fillna(0)
         OORexcel['Promised Date'] = OORexcel['Nueva_Fecha'] + pd.to_timedelta(OORexcel['Dias_a_Sumar_Semana'], unit='D')
-        OORexcel['Promised Date'] = OORexcel['Promised Date'].dt.day_name()
+        OORexcel['New_Day'] = OORexcel['Promised Date'].dt.day_name()
 
         openorders['Material Sku'] = (
             openorders['Material Sku']
