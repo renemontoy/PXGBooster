@@ -2371,6 +2371,7 @@ async def ValidationReceipt(
             "GB-DOZ-XTTR-WHT-USMC-MS",
             "GB-DOZ-XTTRX-WHT-AF-MS",
             "GB-DOZ-XTTRX-WHT-USMC-MS",
+            "TT-700"
         ]
 
         dfmerge['Nuevo Np'] = dfmerge['Inventory ID'].apply(
