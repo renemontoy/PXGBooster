@@ -76,7 +76,6 @@ async def OOR(
             'China-USA-FedEx IE': uspafe,
             'Vietnam-USA-FedEx IE': uspafe,
 
-            
             # MOT UK
             'China-UK-Ocean': ukof,
             'Vietnam-UK-Ocean': ukof,
