@@ -1,6 +1,6 @@
 import pandas as pd
 import io
-from openpyxl.styles import PatternFill, Alignment, Font
+from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from fastapi.responses import StreamingResponse # pyright: ignore[reportMissingImports]
 from fastapi import UploadFile, File, HTTPException # pyright: ignore[reportMissingImports]
@@ -8,103 +8,45 @@ import numpy as np
 from typing import List
 from io import BytesIO
 async def ValidationReceipt(
-    transfers_files: List[UploadFile] = File(...),          
-    ies_files: List[UploadFile] = File(...),        
-):
+        file: UploadFile = File(...)
+        ):
     # Verificación básica de archivos
-    if not transfers_files or not ies_files:
-        raise HTTPException(status_code=400, detail="Debe proporcionar ambos tipos de archivos")
-
+    if not file.filename:
+        raise HTTPException(status_code=400, detail= "Archivo no seleccionado")
     try:
-        # Procesar todos los archivos transfers
-        all_transfers_dfs = []
-
-        for transfers_file in transfers_files:
-            transfers_content = await transfers_file.read()
-            df_transfers = pd.read_excel(BytesIO(transfers_content))
-            
-            # Verificar que tenga las columnas necesarias
-            required_columns = ['Inventory ID', 'Description', 'Quantity']
-            if not all(col in df_transfers.columns for col in required_columns):
-                raise HTTPException(
-                    status_code=400, 
-                    detail=f"Archivo {transfers_file.filename} no tiene las columnas requeridas: {required_columns}"
-                )
-            
-            df_transfers = df_transfers[['Inventory ID', 'Description', 'Quantity']]
-            df_transfers = df_transfers.groupby(['Inventory ID', 'Description'], as_index=False)['Quantity'].sum()
-            all_transfers_dfs.append(df_transfers)
+        recibofile = await file.read()
+        dfrecibo = pd.read_excel(io.BytesIO(recibofile), sheet_name='Transfers', header=1)    
         
-        # Combinar todos los DataFrames de transfers
-        if all_transfers_dfs:
-            combined_transfers = pd.concat(all_transfers_dfs, ignore_index=True)
-            # Agrupar nuevamente por si hay duplicados entre archivos
-            combined_transfers = combined_transfers.groupby(['Inventory ID', 'Description'], as_index=False)['Quantity'].sum()
-        else:
-            combined_transfers = pd.DataFrame(columns=['Inventory ID', 'Description', 'Quantity'])
-        # Procesar todos los archivos IES
-        all_ies_dfs = []
-        
-        for ies_file in ies_files:
-            ies_content = await ies_file.read()
-            df_ies = pd.read_excel(BytesIO(ies_content), skiprows=8)
-            
-            # Verificar que tenga las columnas necesarias
-            required_columns_ies = ['NÚMERO DE PARTE', 'DESCRIPCIÓN EN INGLÉS', 'CANTIDAD']
-            if not all(col in df_ies.columns for col in required_columns_ies):
-                raise HTTPException(
-                    status_code=400, 
-                    detail=f"Archivo {ies_file.filename} no tiene las columnas requeridas: {required_columns_ies}"
-                )
-            
-            df_ies = df_ies[['NÚMERO DE PARTE', 'DESCRIPCIÓN EN INGLÉS', 'CANTIDAD']]
-            all_ies_dfs.append(df_ies)
-        
-        # Combinar todos los DataFrames de IES
-        if all_ies_dfs:
-            combined_ies = pd.concat(all_ies_dfs, ignore_index=True)
-            # Agrupar por si hay duplicados entre archivos
-            combined_ies = combined_ies.groupby(['NÚMERO DE PARTE', 'DESCRIPCIÓN EN INGLÉS'], as_index=False)['CANTIDAD'].sum()
-        else:
-            combined_ies = pd.DataFrame(columns=['NÚMERO DE PARTE', 'DESCRIPCIÓN EN INGLÉS', 'CANTIDAD'])
-        combined_ies = combined_ies.rename(columns={
-            'NÚMERO DE PARTE': 'Inventory ID',
-            'DESCRIPCIÓN EN INGLÉS': 'Description',
-            'CANTIDAD' : 'Quantity'
-        })
-        combined_ies = combined_ies.groupby(['Inventory ID','Description'], as_index=False)['Quantity'].sum()
-        combined_ies['Inventory ID'] =  combined_ies['Inventory ID'].str.replace("'","",regex=False)
-        #print(combined_ies)
-
+        print(dfrecibo.head())
         pattern = r'^(B-|GB|G4|H-|PB|A-J|A-1|A-A|A-D|A-I|A-N|A-Q|A-U|A-Z)'
 
-        mask = combined_transfers['Inventory ID'].astype(str).str.match(pattern)
+        mask = dfrecibo['Inventory ID'].astype(str).str.match(pattern)
 
-        combined_transfers.loc[mask, 'Inventory ID'] = (
-            combined_transfers.loc[mask, 'Inventory ID'].astype(str) + '-MS'
+        dfrecibo.loc[mask, 'Inventory ID'] = (
+            dfrecibo.loc[mask, 'Inventory ID'].astype(str) + '-MS'
         )
 
+        
+        mask2 = dfrecibo['Inventory ID.1'].astype(str).str.match(pattern)
 
-        # Merge
-        dfmerge = pd.merge(combined_transfers,combined_ies,on='Inventory ID',how='outer')
-        dfmerge['Diference'] = dfmerge['Quantity_x'].fillna(0) - dfmerge['Quantity_y'].fillna(0)
+        dfrecibo.loc[mask2, 'Inventory ID.1'] = (
+            dfrecibo.loc[mask2, 'Inventory ID.1'].astype(str) + '-MS'
+        )
 
-        conditions = [
-            dfmerge['Diference'] > 0,
-            dfmerge['Diference'] == 0,
-            dfmerge['Diference'] < 0
-        ]
-        choices = ['Revisar', 'Correcto', 'Revisar']
-        dfmerge['status'] = np.select(conditions,choices,default='Revisar')
-
-        dfmerge = dfmerge.rename(columns={
-            'Description_x':'Description',
-            'Quantity_x':'Quantity Transfers',
-            'Quantity_y': 'Quantity IES',
-            'status': 'Comments'
-        })
-        dfmerge = dfmerge[['Inventory ID', 'Description', 'Quantity Transfers', 'Quantity IES', 'Diference','Comments']]
-
+        # Función para procesar cada grupo de columnas
+        def procesar_grupo(dfrecibo, id_col, desc_col, qty_col):
+            """
+            Agrupa por Inventory ID y suma las cantidades
+            """
+            # Seleccionar solo las columnas relevantes
+            grupo = dfrecibo[[id_col, qty_col]].copy()
+            # Renombrar columnas para facilitar el trabajo
+            grupo.columns = ['Inventory_ID', 'Quantity']
+            # Eliminar filas con ID nulo o vacío
+            grupo = grupo[grupo['Inventory_ID'].notna()]
+            # Agrupar y sumar
+            grupo_agrupado = grupo.groupby('Inventory_ID')['Quantity'].sum().reset_index()
+            return grupo_agrupado
         nps = [
             "139380",
             "156148",
@@ -2374,36 +2316,78 @@ async def ValidationReceipt(
             "TT-700"
         ]
 
-        dfmerge['Nuevo Np'] = dfmerge['Inventory ID'].apply(
+        # Procesar cada grupo de columnas
+        grupo1 = procesar_grupo(dfrecibo, 'Inventory ID', 'Description', 'Quantity')
+        grupo2 = procesar_grupo(dfrecibo, 'Inventory ID.1', 'Description.1', 'Quantity.1')
+        grupo3 = procesar_grupo(dfrecibo, 'Inventory ID.2', 'Description.2', 'Quantity.2')
+
+        # Renombrar columnas para la comparación
+        grupo1.columns = ['Inventory_ID', 'Acumatica']
+        grupo2.columns = ['Inventory_ID', 'Shipment']
+        grupo3.columns = ['Inventory_ID', 'IES']
+
+        # Combinar todos los grupos
+        comparacion = grupo1.merge(grupo2, on='Inventory_ID', how='outer')
+        comparacion = comparacion.merge(grupo3, on='Inventory_ID', how='outer')
+
+        # Rellenar NaN con 0 para los cálculos
+        comparacion[['Acumatica', 'Shipment', 'IES']] = comparacion[['Acumatica', 'Shipment', 'IES']].fillna(0)
+
+        # Calcular diferencias
+        comparacion['Acumatica vs Shipment'] = comparacion['Acumatica'] - comparacion['Shipment']
+        comparacion['Acumatica vs IES'] = comparacion['Acumatica'] - comparacion['IES']
+        comparacion['Shipment vs IES'] = comparacion['Shipment'] - comparacion['IES']
+
+        # Marcar si hay diferencias
+        comparacion['Results'] = comparacion.apply(
+            lambda row: 'Revisar' if (row['Acumatica vs Shipment'] != 0) or 
+                                    (row['Acumatica vs IES'] != 0) or 
+                                    (row['Shipment vs IES'] != 0) 
+                        else 'Correcto',
+            axis=1
+        )
+        comparacion['Nuevo Np'] = comparacion['Inventory_ID'].apply(
             lambda x: 'Nuevo' if str(x) not in nps else ''
         )
-
-        dfmerge = dfmerge[['Inventory ID', 'Description', 'Quantity Transfers', 'Quantity IES', 'Diference', 'Comments','Nuevo Np']]
-
         # Create an Excel file with multiple sheet
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            dfmerge.to_excel(writer, sheet_name='Data', index=False) 
-
+            comparacion.to_excel(writer, sheet_name='Resumen', index=False) 
+            
             workbook = writer.book
-            worksheet = writer.sheets['Data']
+            worksheet = writer.sheets['Resumen']
             
             # Definir colores
             COLORES = {
                 'Correcto': PatternFill(start_color='FFC6EFCE', end_color='FFC6EFCE', fill_type='solid'),
                 'Revisar': PatternFill(start_color='FFFFC7CE', end_color='FFFFC7CE', fill_type='solid')
             }
+
+            HEADER_FONT = Font(bold=True, size=11)
+
+            BORDER = Border(
+                    left=Side(style='thin', color='D0D0D0'),
+                    right=Side(style='thin', color='D0D0D0'),
+                    top=Side(style='thin', color='D0D0D0'),
+                    bottom=Side(style='thin', color='D0D0D0')
+                )
+
+            for col in range(1, len(comparacion.columns) + 1):
+                cell = worksheet.cell(row=1, column=col)
+                cell.font = HEADER_FONT
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+                cell.border = BORDER
             
             # Encontrar columna 'Comments'
             status_col_idx = None
-            for idx, col in enumerate(dfmerge.columns, 1):
-                if col == 'Comments':
+            for idx, col in enumerate(comparacion.columns, 1):
+                if col == 'Results':
                     status_col_idx = idx
                     break
             
             # Aplicar colores a la columna Comments
             if status_col_idx:
-                for row in range(2, len(dfmerge) + 2):
+                for row in range(2, len(comparacion) + 2):
                     cell = worksheet.cell(row=row, column=status_col_idx)
                     status_value = cell.value
                     
@@ -2411,7 +2395,7 @@ async def ValidationReceipt(
                         cell.fill = COLORES[status_value]
                 
                 # Centrar y poner en negrita
-                for row in range(1, len(dfmerge) + 2):
+                for row in range(1, len(comparacion) + 2):
                     cell = worksheet.cell(row=row, column=status_col_idx)
                     cell.alignment = Alignment(horizontal='center', vertical='center')
                     if row > 1:  # Solo negrita para datos, no encabezados
@@ -2441,6 +2425,8 @@ async def ValidationReceipt(
                 'Content-Disposition': 'attachment; filename="Analisis_Importaciones.xlsx"'
             }
         )
+
+
     except UnicodeDecodeError:
         raise HTTPException(status_code=400, detail="Error de codificación.")
     except pd.errors.ParserError:

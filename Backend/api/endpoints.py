@@ -40,10 +40,9 @@ async def procesar(
 
 @router.post("/uploadreceipt")
 async def procesar(
-    transfers_files: List[UploadFile] = File(...),          
-    ies_files: List[UploadFile] = File(...),    
+    file: UploadFile = File(...),  
 ):
-    return await ValidationReceipt(transfers_files, ies_files)
+    return await ValidationReceipt(file)
 
 
 @router.post("/uploadcanada")
