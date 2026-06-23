@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 import io
 from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
@@ -16,8 +18,8 @@ async def ValidationReceipt(
     try:
         recibofile = await file.read()
         dfrecibo = pd.read_excel(io.BytesIO(recibofile), sheet_name='Transfers', header=1)    
-        
-        print(dfrecibo.head())
+        dfrecibo_details = pd.read_excel(io.BytesIO(recibofile), sheet_name='Transfers', header=1)
+
         pattern = r'^(B-|GB|G4|H-|PB|A-J|A-1|A-A|A-D|A-I|A-N|A-Q|A-U|A-Z)'
 
         mask = dfrecibo['Inventory ID'].astype(str).str.match(pattern)
@@ -26,11 +28,22 @@ async def ValidationReceipt(
             dfrecibo.loc[mask, 'Inventory ID'].astype(str) + '-MS'
         )
 
-        
         mask2 = dfrecibo['Inventory ID.1'].astype(str).str.match(pattern)
 
         dfrecibo.loc[mask2, 'Inventory ID.1'] = (
             dfrecibo.loc[mask2, 'Inventory ID.1'].astype(str) + '-MS'
+        )
+
+        mask_details = dfrecibo_details['Inventory ID'].astype(str).str.match(pattern)
+
+        dfrecibo_details.loc[mask_details, 'Inventory ID'] = (
+            dfrecibo_details.loc[mask_details, 'Inventory ID'].astype(str) + '-MS'
+        )
+
+        mask2_details = dfrecibo_details['Inventory ID.1'].astype(str).str.match(pattern)
+
+        dfrecibo_details.loc[mask2_details, 'Inventory ID.1'] = (
+            dfrecibo_details.loc[mask2_details, 'Inventory ID.1'].astype(str) + '-MS'
         )
 
         # Función para procesar cada grupo de columnas
@@ -2339,7 +2352,7 @@ async def ValidationReceipt(
         comparacion['Shipment vs IES'] = comparacion['Shipment'] - comparacion['IES']
 
         # Marcar si hay diferencias
-        comparacion['Results'] = comparacion.apply(
+        comparacion['Resultados'] = comparacion.apply(
             lambda row: 'Revisar' if (row['Acumatica vs Shipment'] != 0) or 
                                     (row['Acumatica vs IES'] != 0) or 
                                     (row['Shipment vs IES'] != 0) 
@@ -2349,6 +2362,103 @@ async def ValidationReceipt(
         comparacion['Nuevo Np'] = comparacion['Inventory_ID'].apply(
             lambda x: 'Nuevo' if str(x) not in nps else ''
         )
+
+        #Details
+        details1 = dfrecibo_details[['Inventory ID', 'Description', 'Quantity']].copy()
+        details2 = dfrecibo_details[['Inventory ID.1','Quantity.1']].copy()
+        details3 = dfrecibo_details[['Inventory ID.2', 'Quantity.2']].copy()
+
+        details1.columns = ['Inventory ID', 'Description', 'Acumatica']
+        details2.columns = ['Inventory ID', 'Shipment']
+        details3.columns = ['Inventory ID', 'IES']
+
+
+        details1.sort_values('Inventory ID', inplace=True)
+
+
+        details1['linea'] = details1.groupby('Inventory ID').cumcount()
+        details2['linea'] = details2.groupby('Inventory ID').cumcount()
+        details3['linea'] = details3.groupby('Inventory ID').cumcount()
+
+        details = details1.merge(
+            details2,
+            on=['Inventory ID', 'linea'],
+            how='outer'
+        )
+
+        details = details.merge(
+            details3,
+            on=['Inventory ID', 'linea'],
+            how='outer'
+        )
+
+        details.drop(columns='linea', inplace=True)
+
+        details[['Acumatica', 'Shipment', 'IES']] = details[['Acumatica', 'Shipment', 'IES']].fillna(0)
+        # Marcar si hay diferencias
+        details['Resultados'] = details.apply(
+            lambda row: 'Revisar' if (row['Acumatica'] != row['Shipment']) or 
+                                    (row['Acumatica'] != row['IES']) or 
+                                    (row['Shipment'] != row['IES']) 
+                        else 'Correcto',
+            axis=1
+        )
+
+        bags = r'^(B-1|B-6|B-C|B-I|B-P|B-U|B-W)'
+        balls = r'^(G4-)'
+        ferrule = r'^(IRO|T-F|T-I|T-P|T-W)'
+        grips = r'^(G-G|G-L|G-P|G-S|G-W)'
+        accee = r'^(A-S|A-W|A-T|A-U|A-Q)'
+        caps = r'^(H-2|H-6|H-U)'
+        weights = r'^(T-D|T-G|TIP|T-T)'
+        headcovers = r'^(HC-|H-2)'
+        heads = r'^(DL-|DR-|FL-|FR-|HL-|HR-|IL-|IR-|PL-|PL4|PR-|PR4|PR5|WL-|WR-)'
+        hosel = r'^(PL3|PR3|PU3)'
+        shaft = r'^(S-A|S-D|S-E|S-F|S-G|S-K|S-M|S-N|S-P|S-T|S-U)'
+
+        details['Tipo'] = details['Inventory ID'].apply(
+            lambda x: 'BAG' if re.match(bags, str(x)) else
+                      'GOLF BALLS' if re.match(balls, str(x)) else
+                      'FERRULES' if re.match(ferrule, str(x)) else
+                      'GRIPS' if re.match(grips, str(x)) else
+                      'ACCESSORIES' if re.match(accee, str(x)) else
+                      'CAPS' if re.match(caps, str(x)) else
+                      'WEIGHTS' if re.match(weights, str(x)) else
+                      'HEADCOVERS' if re.match(headcovers, str(x)) else
+                      'HEADS' if re.match(heads, str(x)) else
+                      'HOSEL' if re.match(hosel, str(x)) else
+                      'SHAFT' if re.match(shaft, str(x)) else ''
+        )
+
+        
+        cantidades_esperadas = {
+            'BAG': [25, 20],
+            'SHAFT': [50, 100],
+            'HEADS': [25,50,75,100,125,150,200],
+            'GOLF BALLS': [72, 144,288],
+        }
+
+        # Función para verificar si la cantidad es esperada
+        def verificar_cantidad(row):
+            tipo = row['Tipo']
+            cantidad = row['Shipment'] 
+            
+            # Si el tipo no está en el diccionario, retornar 'Desconocido'
+            if tipo not in cantidades_esperadas:
+                return 'Desconocido'
+            
+            # Verificar si la cantidad está en las cantidades esperadas
+            if cantidad in cantidades_esperadas[tipo]:
+                return 'Completa'
+            else:
+                return 'Parcial'
+
+        # Aplicar la función para crear la nueva columna
+        details['Importacion'] = details.apply(verificar_cantidad, axis=1)
+
+        details = details[['Tipo', 'Inventory ID', 'Description', 'Acumatica', 'Shipment', 'IES', 'Resultados', 'Importacion']]
+
+
         # Create an Excel file with multiple sheet
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -2357,10 +2467,15 @@ async def ValidationReceipt(
             workbook = writer.book
             worksheet = writer.sheets['Resumen']
             
+
+            
             # Definir colores
             COLORES = {
                 'Correcto': PatternFill(start_color='FFC6EFCE', end_color='FFC6EFCE', fill_type='solid'),
-                'Revisar': PatternFill(start_color='FFFFC7CE', end_color='FFFFC7CE', fill_type='solid')
+                'Revisar': PatternFill(start_color='FFFFC7CE', end_color='FFFFC7CE', fill_type='solid'),
+                'Completa': PatternFill(start_color='FFC6EFCE', end_color='FFC6EFCE', fill_type='solid'),
+                'Parcial': PatternFill(start_color='FFFFEB9C', end_color='FFFFEB9C', fill_type='solid')
+
             }
 
             HEADER_FONT = Font(bold=True, size=11)
@@ -2381,7 +2496,7 @@ async def ValidationReceipt(
             # Encontrar columna 'Comments'
             status_col_idx = None
             for idx, col in enumerate(comparacion.columns, 1):
-                if col == 'Results':
+                if col == 'Resultados':
                     status_col_idx = idx
                     break
             
@@ -2417,6 +2532,76 @@ async def ValidationReceipt(
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column_letter].width = adjusted_width
 
+            #---------Segunda Hoja-----------------------------------------------------------------------
+            details.to_excel(writer, sheet_name='Detalles', index=False)
+            worksheet2 = writer.sheets['Detalles']
+            for col in range(1, len(details.columns) + 1):
+                cell = worksheet2.cell(row=1, column=col)
+                cell.font = HEADER_FONT
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+                cell.border = BORDER
+            
+            # Encontrar columna 'Comments'
+            status_col_idx = None
+            for idx, col in enumerate(details.columns, 1):
+                if col == 'Resultados':
+                    status_col_idx = idx
+                    break
+            
+            # Aplicar colores a la columna Comments
+            if status_col_idx:
+                for row in range(2, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    status_value = cell.value
+                    
+                    if status_value in COLORES:
+                        cell.fill = COLORES[status_value]
+                
+                # Centrar y poner en negrita
+                for row in range(1, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    if row > 1:  # Solo negrita para datos, no encabezados
+                        cell.font = Font(bold=True)
+
+            # Encontrar columna 'Importacion'
+            status_col_idx = None
+            for idx, col in enumerate(details.columns, 1):
+                if col == 'Importacion':
+                    status_col_idx = idx
+                    break
+            
+            # Aplicar colores a la columna Comments
+            if status_col_idx:
+                for row in range(2, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    status_value = cell.value
+                    
+                    if status_value in COLORES:
+                        cell.fill = COLORES[status_value]
+                
+                # Centrar y poner en negrita
+                for row in range(1, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    if row > 1:  # Solo negrita para datos, no encabezados
+                        cell.font = Font(bold=True)
+            
+            # Autoajustar columnas
+            for column in worksheet2.columns:
+                max_length = 0
+                column_letter = get_column_letter(column[0].column)
+                
+                for cell in column:
+                    try:
+                        cell_length = len(str(cell.value))
+                        if cell_length > max_length:
+                            max_length = cell_length
+                    except:
+                        pass
+                
+                adjusted_width = min(max_length + 2, 50)
+                worksheet2.column_dimensions[column_letter].width = adjusted_width
         output.seek(0)
         return StreamingResponse(
             output,
