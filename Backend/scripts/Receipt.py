@@ -2372,8 +2372,9 @@ async def ValidationReceipt(
         details2.columns = ['Inventory ID', 'Shipment']
         details3.columns = ['Inventory ID', 'IES']
 
-
-        details1.sort_values('Inventory ID', inplace=True)
+        details1.sort_values('Acumatica', inplace=True)
+        details2.sort_values('Shipment', inplace=True)
+        details3.sort_values('IES', inplace=True)
 
 
         details1['linea'] = details1.groupby('Inventory ID').cumcount()
