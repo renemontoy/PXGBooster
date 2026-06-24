@@ -2421,10 +2421,10 @@ async def ValidationReceiptprevia(
 
         
         cantidades_esperadas = {
-            'BAG': [25, 20],
+            'BAG': [20,25,24],
             'SHAFT': [50, 100],
             'HEADS': [20,25],
-            'GOLF BALLS': [6, 24],
+            'GOLF BALLS': [24],
             'GRIPS': [100, 120, 150],
         }
 
