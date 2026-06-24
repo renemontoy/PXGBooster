@@ -8,7 +8,7 @@ from fastapi import UploadFile, File, HTTPException # pyright: ignore[reportMiss
 import numpy as np
 from typing import List
 from io import BytesIO
-async def ValidationReceipt(
+async def ValidationReceiptprevia(
         file: UploadFile = File(...)
         ):
     # Verificación básica de archivos
@@ -2331,30 +2331,27 @@ async def ValidationReceipt(
         # Procesar cada grupo de columnas
         grupo1 = procesar_grupo(dfrecibo, 'Inventory ID', 'Description', 'Quantity')
         grupo2 = procesar_grupo(dfrecibo, 'Inventory ID.1', 'Description.1', 'Quantity.1')
-        grupo3 = procesar_grupo(dfrecibo, 'Inventory ID.2', 'Description.2', 'Quantity.2')
+       
 
         # Renombrar columnas para la comparación
         grupo1.columns = ['Inventory_ID', 'Acumatica']
         grupo2.columns = ['Inventory_ID', 'Shipment']
-        grupo3.columns = ['Inventory_ID', 'IES']
+   
 
         # Combinar todos los grupos
         comparacion = grupo1.merge(grupo2, on='Inventory_ID', how='outer')
-        comparacion = comparacion.merge(grupo3, on='Inventory_ID', how='outer')
+
 
         # Rellenar NaN con 0 para los cálculos
-        comparacion[['Acumatica', 'Shipment', 'IES']] = comparacion[['Acumatica', 'Shipment', 'IES']].fillna(0)
+        comparacion[['Acumatica', 'Shipment']] = comparacion[['Acumatica', 'Shipment']].fillna(0)
 
         # Calcular diferencias
         comparacion['Acumatica vs Shipment'] = comparacion['Acumatica'] - comparacion['Shipment']
-        comparacion['Acumatica vs IES'] = comparacion['Acumatica'] - comparacion['IES']
-        comparacion['Shipment vs IES'] = comparacion['Shipment'] - comparacion['IES']
+
 
         # Marcar si hay diferencias
         comparacion['Resultados'] = comparacion.apply(
-            lambda row: 'Revisar' if (row['Acumatica vs Shipment'] != 0) or 
-                                    (row['Acumatica vs IES'] != 0) or 
-                                    (row['Shipment vs IES'] != 0) 
+            lambda row: 'Revisar' if (row['Acumatica vs Shipment'] != 0)
                         else 'Correcto',
             axis=1
         )
@@ -2365,20 +2362,19 @@ async def ValidationReceipt(
         #Details
         details1 = dfrecibo_details[['Inventory ID', 'Description', 'Quantity']].copy()
         details2 = dfrecibo_details[['Inventory ID.1','Quantity.1']].copy()
-        details3 = dfrecibo_details[['Inventory ID.2', 'Quantity.2']].copy()
 
         details1.columns = ['Inventory ID', 'Description', 'Acumatica']
         details2.columns = ['Inventory ID', 'Shipment']
-        details3.columns = ['Inventory ID', 'IES']
+
 
         details1.sort_values('Acumatica', inplace=True)
         details2.sort_values('Shipment', inplace=True)
-        details3.sort_values('IES', inplace=True)
+  
 
 
         details1['linea'] = details1.groupby('Inventory ID').cumcount()
         details2['linea'] = details2.groupby('Inventory ID').cumcount()
-        details3['linea'] = details3.groupby('Inventory ID').cumcount()
+
 
         details = details1.merge(
             details2,
@@ -2386,20 +2382,13 @@ async def ValidationReceipt(
             how='outer'
         )
 
-        details = details.merge(
-            details3,
-            on=['Inventory ID', 'linea'],
-            how='outer'
-        )
 
         details.drop(columns='linea', inplace=True)
 
-        details[['Acumatica', 'Shipment', 'IES']] = details[['Acumatica', 'Shipment', 'IES']].fillna(0)
+        details[['Acumatica', 'Shipment']] = details[['Acumatica', 'Shipment']].fillna(0)
         # Marcar si hay diferencias
         details['Resultados'] = details.apply(
-            lambda row: 'Revisar' if (row['Acumatica'] != row['Shipment']) or 
-                                    (row['Acumatica'] != row['IES']) or 
-                                    (row['Shipment'] != row['IES']) 
+            lambda row: 'Revisar' if (row['Acumatica'] != row['Shipment'])
                         else 'Correcto',
             axis=1
         )
@@ -2457,7 +2446,7 @@ async def ValidationReceipt(
         # Aplicar la función para crear la nueva columna
         details['Importacion'] = details.apply(verificar_cantidad, axis=1)
 
-        details = details[['Tipo', 'Inventory ID', 'Description', 'Acumatica', 'Shipment', 'IES', 'Resultados', 'Importacion']]
+        details = details[['Tipo', 'Inventory ID', 'Description', 'Acumatica', 'Shipment','Resultados', 'Importacion']]
 
 
         # Create an Excel file with multiple sheet

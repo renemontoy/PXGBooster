@@ -11,6 +11,7 @@ from scripts.ValidationMS import ValidationMS
 from scripts.Brett import Brett
 from scripts.Receipt import ValidationReceipt
 from scripts.OOR import OOR
+from scripts.Receipt2 import ValidationReceiptprevia
 from typing import List
 
 router = APIRouter()
@@ -43,6 +44,12 @@ async def procesar(
     file: UploadFile = File(...),  
 ):
     return await ValidationReceipt(file)
+
+@router.post("/uploadreceiptprevia")
+async def procesar(
+    file: UploadFile = File(...),  
+):
+    return await ValidationReceiptprevia(file)
 
 
 @router.post("/uploadcanada")

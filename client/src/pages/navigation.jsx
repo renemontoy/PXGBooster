@@ -57,9 +57,14 @@ export function PXG() {
       route: "/ValidationMS"
     },
         {
-      title: "Validation Receipt",
+      title: "Validación Recibo",
       imageUrl: "/images/PXG4.jpg",
       route: "/ValidationReceipt"
+    },
+            {
+      title: "Validación Recibo Previa",
+      imageUrl: "/images/PXG6.jpg",
+      route: "/ValidationReceiptprevia"
     },
     {
       title: "Unify Excel",
