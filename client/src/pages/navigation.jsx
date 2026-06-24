@@ -21,11 +21,11 @@ export function PXG() {
       imageUrl: "/images/PXG3.jpg",
       route: "/GlobalPayments"
     },
-    {
-      title: "GP & AMEX",
-      imageUrl: "/images/PXG4.jpg",
-      route: "/Tsys"
-    },
+    //{
+    //  title: "GP & AMEX",
+    //  imageUrl: "/images/PXG4.jpg",
+    //  route: "/Tsys"
+    //},
     {
       title: "Canada",
       imageUrl: "/images/PXG5.jpg",
