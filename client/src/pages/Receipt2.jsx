@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 
-export function ValidationReceipt() {
+export function ValidationReceiptprevia() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
 
