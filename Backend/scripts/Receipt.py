@@ -2435,8 +2435,9 @@ async def ValidationReceipt(
         cantidades_esperadas = {
             'BAG': [25, 20],
             'SHAFT': [50, 100],
-            'HEADS': [25,50,75,100,125,150,200],
+            'HEADS': [20,25],
             'GOLF BALLS': [6, 24],
+            'GRIPS': [100, 120, 150],
         }
 
         # Función para verificar si la cantidad es esperada
