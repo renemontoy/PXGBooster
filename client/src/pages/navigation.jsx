@@ -23,32 +23,32 @@ export function PXG() {
     },
     {
       title: "GP & AMEX",
-      imageUrl: "/images/PXG7.jpg",
+      imageUrl: "/images/PXG4.jpg",
       route: "/Tsys"
     },
     {
       title: "Canada",
-      imageUrl: "/images/PXG4.jpg",
+      imageUrl: "/images/PXG5.jpg",
       route: "/Canada"
     },
     {
       title: "Ferrule",
-      imageUrl: "/images/PXG5.jpg",
+      imageUrl: "/images/PXG6.jpg",
       route: "/Ferrule"
     },
     {
       title: "Defect & Warranty Reporter",
-      imageUrl: "/images/PXG6.jpg",
+      imageUrl: "/images/PXG7.jpg",
       route: "/Defect"
     },
     {
       title: "Spec Check Analysis Reporter",
-      imageUrl: "/images/PXG7.jpg",
+      imageUrl: "/images/PXG1.jpg",
       route: "/Spec"
     },
     {
       title: "Loomis Deposits",
-      imageUrl: "/images/PXG4.jpg",
+      imageUrl: "/images/PXG2.jpg",
       route: "/Loomis"
     },
     {
@@ -63,7 +63,7 @@ export function PXG() {
     },
             {
       title: "Validación Recibo Previa",
-      imageUrl: "/images/PXG6.jpg",
+      imageUrl: "/images/PXG5.jpg",
       route: "/ValidationReceiptprevia"
     },
     {
@@ -73,7 +73,7 @@ export function PXG() {
     },
     {
       title: "OOR",
-      imageUrl: "/images/PXG5.jpg",
+      imageUrl: "/images/PXG7.jpg",
       route: "/OOR"
     }
 
