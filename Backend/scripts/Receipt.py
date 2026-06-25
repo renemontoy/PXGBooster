@@ -2325,7 +2325,8 @@ async def ValidationReceipt(
             "GB-DOZ-XTTR-WHT-USMC-MS",
             "GB-DOZ-XTTRX-WHT-AF-MS",
             "GB-DOZ-XTTRX-WHT-USMC-MS",
-            "TT-700"
+            "TT-700",
+            "IL-PXG44-IHOS-CHR-7"
         ]
 
         # Procesar cada grupo de columnas
