@@ -2397,7 +2397,7 @@ async def ValidationReceiptprevia(
         bags = r'^(B-1|B-6|B-C|B-I|B-P|B-U|B-W)'
         balls = r'^(G4-)'
         ferrule = r'^(IRO|T-F|T-I|T-P|T-W)'
-        grips = r'^(G-G|G-L|G-P|G-S|G-W)'
+        grips = r'^(G-G|G-L|G-P|G-S|G-W|G-T)'
         accee = r'^(A-S|A-W|A-T|A-U|A-Q)'
         caps = r'^(H-2|H-6|H-U)'
         weights = r'^(T-D|T-G|TIP|T-T)'
