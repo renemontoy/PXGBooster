@@ -2326,6 +2326,7 @@ async def ValidationReceipt(
             "GB-DOZ-XTTRX-WHT-AF-MS",
             "GB-DOZ-XTTRX-WHT-USMC-MS",
             "TT-700",
+            "IL-PXG44-IHOS-CHR-7"
       
         ]
 
@@ -2449,11 +2450,13 @@ async def ValidationReceipt(
             if tipo not in cantidades_esperadas:
                 return 'Desconocido'
             
-            # Verificar si la cantidad está en las cantidades esperadas
-            if cantidad in cantidades_esperadas[tipo]:
-                return 'Completa'
-            else:
-                return 'Parcial'
+            # Verificar si la cantidad es divisible por algún número en la lista
+            for num in cantidades_esperadas[tipo]:
+                if cantidad % num == 0:  # Si el residuo es 0, es divisible
+                    return 'Completa'
+            
+            # Si no es divisible por ninguno, retornar 'Parcial'
+            return 'Parcial'
 
         # Aplicar la función para crear la nueva columna
         details['Importacion'] = details.apply(verificar_cantidad, axis=1)
