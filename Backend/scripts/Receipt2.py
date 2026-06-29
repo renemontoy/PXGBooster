@@ -2326,8 +2326,7 @@ async def ValidationReceiptprevia(
             "GB-DOZ-XTTRX-WHT-AF-MS",
             "GB-DOZ-XTTRX-WHT-USMC-MS",
             "TT-700",
-            "IL-PXG44-IHOS-CHR-7"
-        ]
+                    ]
 
         # Procesar cada grupo de columnas
         grupo1 = procesar_grupo(dfrecibo, 'Inventory ID', 'Description', 'Quantity')
@@ -2465,7 +2464,8 @@ async def ValidationReceiptprevia(
                 'Correcto': PatternFill(start_color='FFC6EFCE', end_color='FFC6EFCE', fill_type='solid'),
                 'Revisar': PatternFill(start_color='FFFFC7CE', end_color='FFFFC7CE', fill_type='solid'),
                 'Completa': PatternFill(start_color='FFC6EFCE', end_color='FFC6EFCE', fill_type='solid'),
-                'Parcial': PatternFill(start_color='FFFFEB9C', end_color='FFFFEB9C', fill_type='solid')
+                'Parcial': PatternFill(start_color='FFFFEB9C', end_color='FFFFEB9C', fill_type='solid'),
+                'Nuevo': PatternFill(start_color='FF87CEEB', end_color='FF87CEEB', fill_type='solid')
 
             }
 
@@ -2492,6 +2492,30 @@ async def ValidationReceiptprevia(
                     break
             
             # Aplicar colores a la columna Comments
+            if status_col_idx:
+                for row in range(2, len(comparacion) + 2):
+                    cell = worksheet.cell(row=row, column=status_col_idx)
+                    status_value = cell.value
+                    
+                    if status_value in COLORES:
+                        cell.fill = COLORES[status_value]
+                
+                # Centrar y poner en negrita
+                for row in range(1, len(comparacion) + 2):
+                    cell = worksheet.cell(row=row, column=status_col_idx)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    if row > 1:  # Solo negrita para datos, no encabezados
+                        cell.font = Font(bold=True)
+            
+            # Encontrar columna 'Comments'
+            status_col_idx = None
+            for idx, col in enumerate(comparacion.columns, 1):
+                if col == 'Nuevo Np':
+                    status_col_idx = idx
+                    break
+    
+
+            # Aplicar colores a la columna Nuevo Np
             if status_col_idx:
                 for row in range(2, len(comparacion) + 2):
                     cell = worksheet.cell(row=row, column=status_col_idx)
@@ -2577,6 +2601,30 @@ async def ValidationReceiptprevia(
                     cell.alignment = Alignment(horizontal='center', vertical='center')
                     if row > 1:  # Solo negrita para datos, no encabezados
                         cell.font = Font(bold=True)
+
+            # Encontrar columna 'Importacion'
+            status_col_idx = None
+            for idx, col in enumerate(details.columns, 1):
+                if col == 'Importacion':
+                    status_col_idx = idx
+                    break
+            
+            # Aplicar colores a la columna Comments
+            if status_col_idx:
+                for row in range(2, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    status_value = cell.value
+                    
+                    if status_value in COLORES:
+                        cell.fill = COLORES[status_value]
+                
+                # Centrar y poner en negrita
+                for row in range(1, len(details) + 2):
+                    cell = worksheet2.cell(row=row, column=status_col_idx)
+                    cell.alignment = Alignment(horizontal='center', vertical='center')
+                    if row > 1:  # Solo negrita para datos, no encabezados
+                        cell.font = Font(bold=True)
+            
             
             # Autoajustar columnas
             for column in worksheet2.columns:
