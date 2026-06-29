@@ -19,7 +19,7 @@ async def Ferrule(
         df3 = df.copy()
         df4 = df.copy()
         df5 = df.copy()
-        ctr = 1
+        ctr = 0
 
 
 
