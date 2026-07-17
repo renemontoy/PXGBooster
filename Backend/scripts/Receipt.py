@@ -2331,7 +2331,17 @@ async def ValidationReceipt(
             "H-25PXG000394-BW-OSFM-MS",
             "H-25PXG000394-GB-OSFM-MS",
             "H-25PXG000394-WB-OSFM-MS",
-            "H-25PXG000396-VW-OSFM-MS"
+            "H-25PXG000396-VW-OSFM-MS",
+            "B-TC-041-MS",
+            "PL-PXG7-ONEDONE-BLK",
+            "PR-PXG7-ONEDONE-BLK",
+            "G-SS-CRSLN2.0-STD-GRY",
+            "G-SS-REVLCMFT-JUM-WHT",
+            "G-SS-REVLCMFT-MID-WHT",
+            "G-SS-REVLCMFT-STD-WHT",
+            "G-SS-REVLEL4X-MID-BLK",
+            "G-SS-REVLEL4X-STD-BLK",
+            "S-KBS-TOUR-PVD-110-R-3"
       
         ]
 
