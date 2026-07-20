@@ -374,19 +374,25 @@ async def Defect(
         ) # Eliminar comas
         #Agreagar semanas
 
-        def convert_date(date_str):
+        def convert_date_smart(date_str, fechas_referencia=None):
             try:
-                # Convertir fecha sin año (formato día-mes)
                 temp_date = pd.to_datetime(date_str, format='%d-%b')
                 
-                # Aplicar lógica de año
-                if temp_date.month >= 7:  # Julio a Diciembre
-                    return temp_date.replace(year=2025)
-                else:  # Enero a Junio
-                    return temp_date.replace(year=2026)
+                # Si hay fechas de referencia, determinar año
+                if fechas_referencia is not None and not fechas_referencia.empty:
+                    ultima_fecha = fechas_referencia.max()
+                    if temp_date.month >= 7:
+                        # Si es julio o después, usar el año de la última fecha
+                        return temp_date.replace(year=ultima_fecha.year)
+                    else:
+                        # Si es enero-junio, año siguiente
+                        return temp_date.replace(year=ultima_fecha.year + 1)
+                else:
+                    # Lógica original
+                    return temp_date.replace(year=2025 if temp_date.month >= 7 else 2026)
             except:
-                # Si falla, devolver NaT
                 return pd.NaT
+            
         # Aplicar la conversión robusta
         df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
 
