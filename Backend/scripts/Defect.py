@@ -374,27 +374,49 @@ async def Defect(
         ) # Eliminar comas
         #Agreagar semanas
 
-        def convert_date_smart(date_str, fechas_referencia=None):
+        def convert_date_with_cycle(date_str, cycle_count):
+            """Convierte fechas detectando el ciclo anual"""
             try:
-                temp_date = pd.to_datetime(date_str, format='%d-%b')
+                temp = pd.to_datetime(date_str, format='%d-%b')
                 
-                # Si hay fechas de referencia, determinar año
-                if fechas_referencia is not None and not fechas_referencia.empty:
-                    ultima_fecha = fechas_referencia.max()
-                    if temp_date.month >= 7:
-                        # Si es julio o después, usar el año de la última fecha
-                        return temp_date.replace(year=ultima_fecha.year)
-                    else:
-                        # Si es enero-junio, año siguiente
-                        return temp_date.replace(year=ultima_fecha.year + 1)
+                # Si el mes es julio o posterior
+                if temp.month >= 7:
+                    # Primer ciclo = 2025, segundo ciclo = 2026
+                    year = 2025 if cycle_count == 0 else 2026
                 else:
-                    # Lógica original
-                    return temp_date.replace(year=2025 if temp_date.month >= 7 else 2026)
+                    # Meses de enero a junio: siguiente año
+                    year = 2025 if cycle_count == 0 else 2026
+                
+                return temp.replace(year=year)
             except:
                 return pd.NaT
+
+        # Detectar ciclos
+        ciclo_actual = 0
+        fechas_procesadas = []
+        fecha_anterior = None
+
+        for fecha_str in df_transposed['Fecha']:
+            try:
+                temp = pd.to_datetime(fecha_str, format='%d-%b')
+                
+                # Detectar nuevo ciclo (de <7 a >=7)
+                if fecha_anterior is not None:
+                    if fecha_anterior.month < 7 and temp.month >= 7:
+                        ciclo_actual += 1
+                
+                # Asignar año según ciclo
+                year = 2025 if ciclo_actual == 0 else 2026
+                fechas_procesadas.append(temp.replace(year=year))
+                fecha_anterior = temp
+                
+            except:
+                fechas_procesadas.append(pd.NaT)
+
+        df_transposed['Fecha'] = fechas_procesadas
             
         # Aplicar la conversión robusta
-        df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
+        #df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
 
         #df_transposed['Fecha'] = pd.to_datetime(df_transposed['Fecha'] + '-2025', format='%b %d-%Y')
         df_transposed["semana_relativa"] = (((df_transposed['Fecha'] - fechainicio).dt.days // 7) + 1).astype("Int64")
