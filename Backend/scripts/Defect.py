@@ -374,22 +374,14 @@ async def Defect(
         ) # Eliminar comas
         #Agreagar semanas
 
-        def convert_date(date_str):
-            try:
-                # Convertir fecha sin año (formato día-mes)
-                temp_date = pd.to_datetime(date_str, format='%d-%b')
-                
-                # Aplicar lógica de año
-                if temp_date.month >= 7:  # Julio a Diciembre
-                    return temp_date.replace(year=2025)
-                else:  # Enero a Junio
-                    return temp_date.replace(year=2026)
-            except:
-                # Si falla, devolver NaT
-                return pd.NaT
+        df_transposed['Fecha'] = pd.to_datetime(
+            df_transposed['Fecha'],
+            format="%m/%d/%Y",
+            errors="coerce"
+        )
             
         # Aplicar la conversión robusta
-        df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
+        #df_transposed['Fecha'] = df_transposed['Fecha'].apply(convert_date)
 
         #df_transposed['Fecha'] = pd.to_datetime(df_transposed['Fecha'] + '-2025', format='%b %d-%Y')
         df_transposed["semana_relativa"] = (((df_transposed['Fecha'] - fechainicio).dt.days // 7) + 1).astype("Int64")
