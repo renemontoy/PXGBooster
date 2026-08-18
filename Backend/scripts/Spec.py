@@ -141,7 +141,7 @@ async def Spec(
                 bg_color = colors.white
             elif isinstance(value, (int, float)) and 8.0 <= value < 10.0:
                 bg_color = Color(0.8, 0.3, 0.3)  
-            elif isinstance(value, (int, float)) and 5.0 <= value <= 5.9:
+            elif isinstance(value, (int, float)) and 5.0 <= value <= 7.9:
                 bg_color = Color(0.8984, 0.4101, 0.4375)
             elif isinstance(value, (int, float)) and 0 <= value <= 4.9:
                 bg_color = Color(0.3, 0.7, 0.3) 
