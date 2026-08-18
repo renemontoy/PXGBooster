@@ -19,7 +19,7 @@ async def Ferrule(
         df3 = df.copy()
         df4 = df.copy()
         df5 = df.copy()
-        ctr = 0
+        ctr = 1
 
 
 
@@ -614,7 +614,7 @@ async def Ferrule(
             df6['Max. Shipped Clubs'] = pd.to_numeric(df6['Max. Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
-            w = "T-TIPWEIGHT-2G"
+            w = "T-GEN8IRWGT-SIL-5G"
             q = 1500
             dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             qlineas= dffiltro.head(q).copy()
