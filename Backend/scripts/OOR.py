@@ -45,8 +45,8 @@ async def OOR(
         usof = 40
         usaf = 14
         uspafe = 7
-        usfbvn = 31
-        usfbcn = 25
+        usfbvn = 36
+        usfbcn = 31
 
         #MOT UK
         ukof = 50
