@@ -27,7 +27,7 @@ async def Loomis(
         dfChasetoday['Deposit Date'] = pd.to_datetime(dfChasetoday['Deposit Date'])
         dfChasetoday['Deposit Date'] = dfChasetoday['Deposit Date'].dt.strftime('%m/%d/%Y')
         dfChasetoday['Cash Account'] = '10280'
-        dfChasetoday['Fin. Period'] = '08-2026'
+        dfChasetoday['Fin. Period'] = '09-2026'
         dfChasetoday['Cash Drop Account'] = '101' + dfChasetoday['Notes'].str[-2:]
         dfChasetoday['Concat'] = dfChasetoday['Fecha'] + ' ' + dfChasetoday['Notes']
         dfChasetoday['Concat'] = dfChasetoday['Concat'].str.replace('/','.')
