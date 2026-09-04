@@ -2345,6 +2345,10 @@ async def ValidationReceiptprevia(
             "HC-1417-SW2DR",
             "G-SS-CRSLN2.0-JUM-GRY",
             "G-SS-CRSLN2.0-MID-GRY",
+            "DL-PXG35-13",
+            "DR-PXG35-13",
+            "H-25PXG000385-OSFM-MS",
+            "PR-PXG7-TORPEDO-BLK",
                     ]
 
         # Procesar cada grupo de columnas
