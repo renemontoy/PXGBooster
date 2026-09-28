@@ -2349,6 +2349,15 @@ async def ValidationReceipt(
             "DR-PXG35-13",
             "H-25PXG000385-OSFM-MS",
             "PR-PXG7-TORPEDO-BLK",
+            "PL-PXG7-TORPEDO-BLK",
+            "S-DG-S400TI-9W",
+            "S-DG-X100TI-3",
+            "S-DG-X100TI-4",
+            "S-DG-X100TI-5",
+            "S-DG-X100TI-6",
+            "S-DG-X100TI-7",
+            "S-DG-X100TI-8",
+            "S-DG-X100TI-9W"
         ]
 
         # Procesar cada grupo de columnas
