@@ -29,7 +29,7 @@ async def Ferrule(
         #df.loc[df['Inventory Identifier'] == 'S-ACCR-ISTL-GRN-125-X-W', ['Inventory Identifier']] = ['S-ACCR-ISTL-GRN-125-X-9W']
         
         #Cabezalez de china
-        df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
+        #df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
         df.loc[df['Inventory Identifier'] == 'A-SHAFT-ADAPTER-HYB', ['Inventory Identifier']] = ['A-SHAFT-ADPTR-HYBLH']
 
         df.loc[df['Finished Good Name'] == 'FL-PXG18-3-FG', ['Finished Good Name']] = ['FL-PXG18-3-FG-C']
@@ -618,7 +618,7 @@ async def Ferrule(
 
             #AGREGAR PRIMER TIPWEIGHT
             w = "T-GEN8IRWGT-SIL-5G"
-            q = 1500
+            q = 1000
             dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             qlineas= dffiltro.head(q).copy()
             qlineas['Inventory Identifier'] = w
@@ -630,7 +630,7 @@ async def Ferrule(
 
             #AGREGANDO SEGUNDO TIPWEIGHT
             we = "T-TIPWEIGHT-2G"
-            qu = 1500
+            qu = 1000
             dffiltro2 = df7.loc[df7["Max. Shipped Clubs"] == 1]
             qlineas2 = dffiltro2.head(qu).copy()
             qlineas2["Inventory Identifier"] = we
