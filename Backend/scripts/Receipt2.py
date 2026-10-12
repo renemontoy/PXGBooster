@@ -2357,7 +2357,8 @@ async def ValidationReceiptprevia(
             "S-DG-X100TI-6",
             "S-DG-X100TI-7",
             "S-DG-X100TI-8",
-            "S-DG-X100TI-9W"
+            "S-DG-X100TI-9W",
+            "HC-1438-RPTRHY"
                     ]
 
         # Procesar cada grupo de columnas
