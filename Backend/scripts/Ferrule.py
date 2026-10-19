@@ -29,11 +29,11 @@ async def Ferrule(
         #df.loc[df['Inventory Identifier'] == 'S-ACCR-ISTL-GRN-125-X-W', ['Inventory Identifier']] = ['S-ACCR-ISTL-GRN-125-X-9W']
         
         #Cabezalez de china
-        #df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
+        df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
         #df.loc[df['Inventory Identifier'] == 'FR-PXG18-3', ['Inventory Identifier']] = ['FR-PXG18-3-C']
         df.loc[df['Inventory Identifier'] == 'A-SHAFT-ADAPTER-HYB', ['Inventory Identifier']] = ['A-SHAFT-ADPTR-HYBLH']
 
-        #df.loc[df['Finished Good Name'] == 'FL-PXG18-3-FG', ['Finished Good Name']] = ['FL-PXG18-3-FG-C']
+        df.loc[df['Finished Good Name'] == 'FL-PXG18-3-FG', ['Finished Good Name']] = ['FL-PXG18-3-FG-C']
         #df.loc[df['Finished Good Name'] == 'FR-PXG18-3-FG', ['Finished Good Name']] = ['FR-PXG18-3-FG-C']
         df.loc[df['Finished Good Name'] == 'A-SHAFT-ADAPTER-HYB-FG-ACCE', ['Finished Good Name']] = ['A-SHAFT-ADPTR-HYBLH-FG-ACCE']
 
