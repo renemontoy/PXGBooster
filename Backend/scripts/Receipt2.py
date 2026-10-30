@@ -2410,6 +2410,19 @@ async def ValidationReceiptprevia(
             "B-PG-173-FW26-DT-MS",
             "B-PG-244-FW26-US-MS",
             "B-PG-257-TSBBW-MS"
+            "FL-PXG20-11",
+            "FL-PXG20-3",
+            "FL-PXG20-4",
+            "FL-PXG20-5",
+            "FL-PXG20-7",
+            "FL-PXG20-9",
+            "G-TT-ICON-STD-BLK",
+            "S-PX-TITAN-HYB-BLK-80-6.0",
+            "DR-PXG36-10.5-V",
+            "DR-PXG36-12-V",
+            "DR-PXG37-10.5-V",
+            "DR-PXG37-9-V",
+            "DR-PXG38-10.5-V"
                     ]
 
         # Procesar cada grupo de columnas
