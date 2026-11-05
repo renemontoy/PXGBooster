@@ -29,13 +29,13 @@ async def Ferrule(
         #df.loc[df['Inventory Identifier'] == 'S-ACCR-ISTL-GRN-125-X-W', ['Inventory Identifier']] = ['S-ACCR-ISTL-GRN-125-X-9W']
         
         #Cabezalez de china
-        df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
+        #df.loc[df['Inventory Identifier'] == 'FL-PXG18-3', ['Inventory Identifier']] = ['FL-PXG18-3-C']
         #df.loc[df['Inventory Identifier'] == 'FR-PXG18-3', ['Inventory Identifier']] = ['FR-PXG18-3-C']
-        df.loc[df['Inventory Identifier'] == 'A-SHAFT-ADAPTER-HYB', ['Inventory Identifier']] = ['A-SHAFT-ADPTR-HYBLH']
+        #df.loc[df['Inventory Identifier'] == 'A-SHAFT-ADAPTER-HYB', ['Inventory Identifier']] = ['A-SHAFT-ADPTR-HYBLH']
 
-        df.loc[df['Finished Good Name'] == 'FL-PXG18-3-FG', ['Finished Good Name']] = ['FL-PXG18-3-FG-C']
+        #df.loc[df['Finished Good Name'] == 'FL-PXG18-3-FG', ['Finished Good Name']] = ['FL-PXG18-3-FG-C']
         #df.loc[df['Finished Good Name'] == 'FR-PXG18-3-FG', ['Finished Good Name']] = ['FR-PXG18-3-FG-C']
-        df.loc[df['Finished Good Name'] == 'A-SHAFT-ADAPTER-HYB-FG-ACCE', ['Finished Good Name']] = ['A-SHAFT-ADPTR-HYBLH-FG-ACCE']
+        #df.loc[df['Finished Good Name'] == 'A-SHAFT-ADAPTER-HYB-FG-ACCE', ['Finished Good Name']] = ['A-SHAFT-ADPTR-HYBLH-FG-ACCE']
 
 
         #Cambios 115 a 100
@@ -685,8 +685,8 @@ async def Ferrule(
             df6['Max. Shipped Clubs'] = pd.to_numeric(df6['Max. Shipped Clubs'], errors='coerce')
 
             #AGREGAR PRIMER TIPWEIGHT
-            w = "T-TIPWEIGHT-4G"
-            q = 800
+            w = "T-TIPWEIGHT-3G"
+            q = 829
             dffiltro = df6.loc[df6["Max. Shipped Clubs"] == 1]
             qlineas= dffiltro.head(q).copy()
             qlineas['Inventory Identifier'] = w
@@ -697,8 +697,8 @@ async def Ferrule(
             df7 ['Shipment Nbr Count'] = 1
 
             #AGREGANDO SEGUNDO TIPWEIGHT
-            we = "T-GEN8IRWGT-SIL-9G"
-            qu = 800
+            we = "T-GEN8IRWGT-SIL-6G"
+            qu = 829
             dffiltro2 = df7.loc[df7["Max. Shipped Clubs"] == 1]
             qlineas2 = dffiltro2.head(qu).copy()
             qlineas2["Inventory Identifier"] = we
