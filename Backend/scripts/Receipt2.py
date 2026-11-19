@@ -2422,7 +2422,29 @@ async def ValidationReceiptprevia(
             "DR-PXG36-12-V",
             "DR-PXG37-10.5-V",
             "DR-PXG37-9-V",
-            "DR-PXG38-10.5-V"
+            "DR-PXG38-10.5-V",
+            "DR-PXG35-13-V",
+            "G-TT-ICON-UND-BLK",
+            "H-110P-BLK-OSFM-MS",
+            "H-110P-NVY-OSFM-MS",
+            "H-110P-SIL-OSFM-MS",
+            "H-110P-WHT-OSFM-MS",
+            "H-25PXG000364-BB-OSFM-MS",
+            "H-25PXG000364-WW-OSFM-MS",
+            "H-25PXG000386-GB-OSFM-MS",
+            "H-25PXG000386-WB-OSFM-MS",
+            "H-25PXG000386-WG-OSFM-MS",
+            "H-25PXG000386-WN-OSFM-MS",
+            "H-25PXG000387-GW-OSFM-MS",
+            "H-25PXG000387-NW-OSFM-MS",
+            "H-25PXG000396-TH-OSFM-MS",
+            "HC-1435-RPTRDR",
+            "HC-1436-RPTRFW",
+            "IR-PXG43-CHR-8-C",
+            "WR-PXG6-56-CHR-25",
+            "WR-PXG7-BLK-60-10S-V",
+            "WR-PXG7-CHR-54-12BP-V",
+            "WR-PXG8-CHR-50-10S-V"
                     ]
 
         # Procesar cada grupo de columnas
